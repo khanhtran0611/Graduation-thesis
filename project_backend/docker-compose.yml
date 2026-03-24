@@ -1,0 +1,103 @@
+version: '3.8'
+
+services:
+  # Backend Service
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project_backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/GR2_test
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_USE_SSL=false
+      - MINIO_BUCKET=project-bucket
+    depends_on:
+      - mongo
+      - minio
+    networks:
+      - app-network
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+
+  # MongoDB Service
+  mongo:
+    image: mongo:7-jammy
+    container_name: project_mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=GR2_test
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # MinIO Service (S3-compatible object storage)
+  minio:
+    image: minio/minio:latest
+    container_name: project_minio
+    restart: unless-stopped
+    ports:
+      - "9000:9000"  # API Port
+      - "9001:9001"  # Console Port
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio-data:/data
+    networks:
+      - app-network
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # MinIO Client - Create bucket on startup
+  minio-client:
+    image: minio/mc:latest
+    container_name: project_minio_client
+    depends_on:
+      - minio
+    networks:
+      - app-network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb myminio/project-bucket --ignore-existing;
+      /usr/bin/mc anonymous set public myminio/project-bucket;
+      exit 0;
+      "
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
+  mongo-config:
+    driver: local
+  minio-data:
+    driver: local

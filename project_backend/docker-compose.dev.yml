@@ -1,0 +1,78 @@
+version: "3.8"
+
+services:
+  # Backend Service - Development Mode
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: project_backend_dev
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - MESSAGE="Hello from .env"
+      - NODE_ENV=development
+      - PORT=5000
+      - MINIO_ENDPOINT=minio
+      - MINIO_PUBLIC_ENDPOINT=localhost
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_USE_SSL=false
+      - MINIO_BUCKET=project-bucket
+      - SECRET_KEY=a4f8e1b3c9d0267519f4e8a2b6d1c03f5a79e2d8c1b04693e7f2a5d9c8b014e3
+      - JWT_SECRET=a4f8e1b3c9d0267519f4e8a2b6d1c03f5a79e2d8c1b04693e7f2a5d9c8b014e3
+    depends_on:
+      - minio
+    networks:
+      - app-network
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./.env:/app/.env
+      - ../types:/app/types
+      - /app/node_modules
+
+  # MinIO Service
+  minio:
+    image: minio/minio:latest
+    container_name: project_minio_dev
+    restart: unless-stopped
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio-data-dev:/data
+    networks:
+      - app-network
+    command: server /data --console-address ":9001"
+
+  # MinIO Client
+  minio-client:
+    image: minio/mc:latest
+    container_name: project_minio_client_dev
+    depends_on:
+      - minio
+    networks:
+      - app-network
+    entrypoint: >
+      /bin/sh -c "
+      sleep 10;
+      /usr/bin/mc alias set myminio http://minio:9000 minioadmin minioadmin;
+      /usr/bin/mc mb myminio/project-bucket --ignore-existing;
+      /usr/bin/mc anonymous set public myminio/project-bucket;
+      exit 0;
+      "
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  minio-data-dev:
+    driver: local

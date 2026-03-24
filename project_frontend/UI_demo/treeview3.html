@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sơ Đồ Treeview</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Material+Symbols+Rounded"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./treeview3.css" />
+  </head>
+  <body>
+    <div class="layout">
+      <nav class="drawer" aria-label="Navigation drawer icon">
+        <span class="drawer-icon" aria-hidden="true">menu</span>
+      </nav>
+      <main class="content">
+        <h1 class="section-title">Hierarchy Overview</h1>
+        <section class="tree-container" aria-label="Treeview">
+          <div class="tree-wrapper">
+            <div class="tree-panel">
+              <ul class="tree" role="tree">
+                <li role="treeitem" aria-expanded="true">
+                  <span class="node-label">Lorem Root Node</span>
+                  <ul role="group">
+                    <li role="treeitem" aria-expanded="true">
+                      <span class="node-label">Lorem Branch A</span>
+                      <ul role="group">
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf A1</span>
+                        </li>
+                        <li role="treeitem" aria-expanded="true">
+                          <span class="node-label">Lorem Branch A2</span>
+                          <ul role="group">
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf A2-1</span>
+                            </li>
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf A2-2</span>
+                            </li>
+                          </ul>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf A3</span>
+                        </li>
+                      </ul>
+                    </li>
+                    <li role="treeitem" aria-expanded="true">
+                      <span class="node-label">Lorem Branch B</span>
+                      <ul role="group">
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B1</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B2</span>
+                        </li>
+                        <li role="treeitem" aria-expanded="true">
+                          <span class="node-label">Lorem Branch B3</span>
+                          <ul role="group">
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf B3-1</span>
+                            </li>
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf B3-2</span>
+                            </li>
+                          </ul>
+                        </li>
+                        <!-- Extra long and many items to force scrollbars -->
+                        <li role="treeitem">
+                          <span class="node-label"
+                            >Lorem Leaf B4 — This is an extremely long node
+                            label designed to trigger a horizontal scrollbar in
+                            the tree panel area</span
+                          >
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B5</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B6</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B7</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B8</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B9</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B10</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B11</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B12</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B13</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B14</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf B15</span>
+                        </li>
+                      </ul>
+                    </li>
+                    <li role="treeitem">
+                      <span class="node-label">Lorem Leaf C</span>
+                    </li>
+                    <!-- New large branch to increase tree size -->
+                    <li role="treeitem" aria-expanded="true">
+                      <span class="node-label">Lorem Branch D</span>
+                      <ul role="group">
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D1</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D2</span>
+                        </li>
+                        <li role="treeitem" aria-expanded="true">
+                          <span class="node-label">Lorem Branch D3</span>
+                          <ul role="group">
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf D3-1</span>
+                            </li>
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf D3-2</span>
+                            </li>
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf D3-3</span>
+                            </li>
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf D3-4</span>
+                            </li>
+                            <li role="treeitem">
+                              <span class="node-label">Lorem Leaf D3-5</span>
+                            </li>
+                          </ul>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D4</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D5</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D6</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D7</span>
+                        </li>
+                        <li role="treeitem">
+                          <span class="node-label">Lorem Leaf D8</span>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </div>
+            <div class="content-panel">
+              <!-- Mode toggle controls the view below (Content vs Modify) -->
+              <input type="checkbox" id="mode-toggle" class="mode-toggle" />
+              <div class="content-header">
+                <nav class="breadcrumb" aria-label="Current node path">
+                  <span class="crumb">Lorem Root Node</span>
+                  <span class="crumb-separator" aria-hidden="true">&gt;</span>
+                  <span class="crumb">Lorem Branch B</span>
+                  <span class="crumb-separator" aria-hidden="true">&gt;</span>
+                  <span class="crumb current" aria-current="page"
+                    >Lorem Leaf B4</span
+                  >
+                </nav>
+                <!-- <label for="mode-toggle" class="toggle" title="Switch view">
+                  <span class="option view">Content</span>
+                  <span class="option edit">Modify</span>
+                  <span class="thumb" aria-hidden="true"></span>
+                </label> -->
+              </div>
+              <div class="content-body">
+                <div class="content-view">
+                  <div class="config-header-card">
+                    <h3 class="config-title">Node Draw Configuration</h3>
+                    <div class="field config-total-field">
+                      <label class="field-label"
+                        >Total questions to draw from this node</label
+                      >
+                      <input
+                        type="number"
+                        class="field-input large-input"
+                        value="10"
+                        min="0"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="config-section">
+                    <h3 class="section-heading">
+                      General Question Configuration
+                    </h3>
+
+                    <div class="question-type-card">
+                      <div class="type-header">
+                        <h4>Multiple Choice Question</h4>
+                        <div class="type-total">
+                          <label>Total MCQ</label>
+                          <input
+                            type="number"
+                            class="field-input small-input"
+                            value="6"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                      <div class="difficulty-sliders">
+                        <div class="slider-group">
+                          <label>Easy (<span class="val">3</span>)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="3"
+                            class="slider easy"
+                          />
+                        </div>
+                        <div class="slider-group">
+                          <label>Medium (<span class="val">2</span>)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="2"
+                            class="slider medium"
+                          />
+                        </div>
+                        <div class="slider-group">
+                          <label>Hard (<span class="val">1</span>)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="1"
+                            class="slider hard"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="question-type-card">
+                      <div class="type-header">
+                        <h4>Blank Filling</h4>
+                        <div class="type-total">
+                          <label>Total Blank Filling</label>
+                          <input
+                            type="number"
+                            class="field-input small-input"
+                            value="4"
+                            min="0"
+                          />
+                        </div>
+                      </div>
+                      <div class="difficulty-sliders">
+                        <div class="slider-group">
+                          <label>Easy (<span class="val">2</span>)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="2"
+                            class="slider easy"
+                          />
+                        </div>
+                        <div class="slider-group">
+                          <label>Medium (<span class="val">1</span>)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="1"
+                            class="slider medium"
+                          />
+                        </div>
+                        <div class="slider-group">
+                          <label>Hard (<span class="val">1</span>)</label>
+                          <input
+                            type="range"
+                            min="0"
+                            max="10"
+                            value="1"
+                            class="slider hard"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="config-section opacity-50">
+                    <h3 class="section-heading">
+                      Grouped Questions Configuration
+                    </h3>
+                    <p
+                      class="helper-text"
+                      style="color: var(--text-subtle); margin-top: 0"
+                    >
+                      (Sẽ phát triển ở bước tiếp theo...)
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

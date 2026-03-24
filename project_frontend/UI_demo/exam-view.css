@@ -1,0 +1,155 @@
+/* --- BASE RESET & FONT --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  background-color: #f8fafc; /* Nền xám cực nhạt, dịu mắt hơn trắng tinh */
+  color: #334155; /* Chữ xám than, không dùng đen tuyền (#000) để đỡ gắt */
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+
+/* --- EXAM PAPER CONTAINER --- */
+.exam-paper-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background: #ffffff; /* Bản in nền trắng */
+  padding: 40px 48px;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.02),
+    0 10px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+}
+
+.exam-header {
+  padding-bottom: 24px;
+  border-bottom: 2px solid #cbd5e1; /* Viền xám trung tính */
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.exam-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a; /* Tiêu đề đậm màu nhất */
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.exam-meta {
+  font-size: 0.95rem;
+  color: #64748b;
+}
+
+/* --- QUESTION BLOCK --- */
+.question-block {
+  margin-bottom: 36px;
+}
+
+.question-content {
+  font-size: 0.95rem; /* Giảm từ 1.1rem xuống */
+  margin-bottom: 16px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.q-num {
+  font-weight: 700;
+  margin-right: 6px;
+  color: #0f172a;
+}
+
+/* --- MCQ --- */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-left: 28px; /* Căn lùi vào so với chữ số */
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; /* Giảm từ 24px */
+  height: 22px; /* Giảm từ 24px */
+  border: 1px solid #94a3b8;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 0.75rem; /* Chữ cái bên trong nhỏ lại */
+  margin-right: 12px;
+  margin-top: 1px; /* Chỉnh lại để thẳng hàng với text nhỏ */
+  flex-shrink: 0;
+  color: #475569;
+}
+
+.option-text {
+  font-size: 0.95rem; /* Giảm từ 1.05rem xuống */
+  color: #334155;
+}
+
+.option-item.correct .option-label {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.option-item.correct .option-text {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* --- BLANK FILLING --- */
+.blank-line {
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #94a3b8;
+}
+
+.answer-text {
+  font-size: 0.95rem; /* Giảm từ 1rem xuống */
+  color: #64748b;
+}
+
+.fill-text {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* --- GROUPED QUESTION --- */
+.group-scenario {
+  font-size: 1.05rem;
+  font-weight: bold; /* In đậm toàn bộ đoạn văn */
+  color: #0f172a; /* Màu đen than */
+  margin-bottom: 24px;
+  text-align: justify;
+}
+
+.scenario-instruction {
+  font-weight: 700;
+  font-style: italic;
+  margin-bottom: 12px;
+  color: #0f172a; /* Đổi về màu đen than đồng bộ với toàn bộ text */
+}
+
+.sub-questions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}

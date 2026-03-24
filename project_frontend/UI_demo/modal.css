@@ -1,0 +1,122 @@
+/* Nút bấm ngoài màn hình chính */
+.btn-trigger-delete-modal {
+  padding: 10px 20px;
+  background-color: #dc3545; /* Màu đỏ */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* =========================================
+   CSS CHO DELETE MODAL
+   ========================================= */
+
+/* Lớp nền mờ */
+.overlay-delete-modal {
+  display: none; /* Mặc định ẩn */
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Class dùng để hiển thị modal thông qua JS */
+.show-delete-modal {
+  display: flex;
+}
+
+/* Hộp thoại chính */
+.content-delete-modal {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  min-width: 350px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  animation: slideDownDelete 0.2s ease-out;
+}
+
+/* Tiêu đề */
+.header-delete-modal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.header-delete-modal h3 {
+  margin: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.close-icon-delete-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.close-icon-delete-modal:hover {
+  color: #000;
+}
+
+/* Nội dung câu hỏi */
+.body-delete-modal p {
+  margin: 0 0 20px 0;
+  font-size: 16px;
+  color: #444;
+}
+
+/* Khu vực nút bấm */
+.actions-delete-modal {
+  display: flex;
+  justify-content: flex-end; /* Đẩy 2 nút sang bên phải */
+  gap: 10px; /* Khoảng cách giữa 2 nút */
+}
+
+/* Nút Cancel */
+.btn-cancel-delete-modal {
+  padding: 8px 16px;
+  background-color: #f1f1f1;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-cancel-delete-modal:hover {
+  background-color: #e2e2e2;
+}
+
+/* Nút Accept */
+.btn-accept-delete-modal {
+  padding: 8px 16px;
+  background-color: #dc3545; /* Màu đỏ cảnh báo */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-accept-delete-modal:hover {
+  background-color: #c82333;
+}
+
+/* Hiệu ứng trượt */
+@keyframes slideDownDelete {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

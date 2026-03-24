@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bảng Môn Học</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Material+Symbols+Rounded"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <input type="checkbox" id="drawer-toggle" class="drawer-toggle" />
+
+    <div class="layout">
+      <nav class="drawer" aria-label="Navigation drawer">
+        <label
+          for="drawer-toggle"
+          class="drawer-icon-button"
+          aria-label="Toggle navigation menu"
+        >
+          <span class="drawer-icon" aria-hidden="true">menu</span>
+        </label>
+      </nav>
+
+      <!-- Dark overlay -->
+      <label
+        for="drawer-toggle"
+        class="drawer-overlay"
+        aria-hidden="true"
+      ></label>
+
+      <!-- Sliding side panel -->
+      <aside class="drawer-panel">
+        <div class="drawer-panel-header">
+          <h2 class="drawer-panel-title">Navigation</h2>
+          <label
+            for="drawer-toggle"
+            class="drawer-close-button"
+            aria-label="Close menu"
+          >
+            <span class="material-symbols-rounded">close</span>
+          </label>
+        </div>
+        <nav class="drawer-menu">
+          <a href="#" class="drawer-menu-item">Dashboard</a>
+          <a href="#" class="drawer-menu-item">Courses</a>
+          <a href="#" class="drawer-menu-item">Question bank</a>
+          <a href="#" class="drawer-menu-item">Settings</a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <h1 class="section-title">Available courses</h1>
+        <section class="courses-toolbar" aria-label="Course search toolbar">
+          <div class="courses-toolbar-left">
+            <div class="courses-search-group">
+              <span
+                class="courses-search-icon material-symbols-rounded"
+                aria-hidden="true"
+              >
+                search
+              </span>
+              <input
+                type="search"
+                class="courses-search-input"
+                placeholder="Search courses..."
+                aria-label="Search courses"
+              />
+              <button
+                type="button"
+                class="courses-criteria-btn"
+                aria-label="Open filters"
+              >
+                <span
+                  class="material-symbols-rounded courses-filter-icon"
+                  aria-hidden="true"
+                >
+                  tune
+                </span>
+                Filter
+              </button>
+            </div>
+          </div>
+        </section>
+        <section class="cards-grid">
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 01</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 02</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 03</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 04</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 05</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 06</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 07</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+          <article class="card">
+            <h2 class="card-title">Lorem Ipsum 08</h2>
+            <div class="card-actions">
+              <span class="action-icon" title="Xem">visibility</span>
+              <span class="action-icon" title="Xóa">delete</span>
+              <span class="action-icon" title="Sửa">edit</span>
+            </div>
+          </article>
+        </section>
+      </main>
+      <button
+        type="button"
+        class="fab-add"
+        aria-label="Add course"
+        title="Add course"
+      >
+        <span class="material-symbols-rounded" aria-hidden="true">add</span>
+      </button>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,241 @@
+[
+  {
+    "node_id": "68f652633e48f88fbfd691f5",
+    "type": "mcq",
+    "difficulty": "medium",
+    "content": "In the ACID properties of a Database Transaction, which property ensures that a transaction is treated as a single unit that either succeeds completely or fails completely?",
+    "image": "",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000001" },
+        "content": "Atomicity",
+        "is_correct": true,
+        "answer_label": "A",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000002" },
+        "content": "Consistency",
+        "is_correct": false,
+        "answer_label": "B",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000003" },
+        "content": "Isolation",
+        "is_correct": false,
+        "answer_label": "C",
+        "image": "https://example.com/isolation-diagram.png"
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000004" },
+        "content": "Durability",
+        "is_correct": false,
+        "answer_label": "D",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:00:00.000Z",
+    "updatedAt": "2023-12-06T10:00:00.000Z"
+  },
+  {
+    "node_id": "68f652633e48f88fbfd691f6",
+    "type": "blank-filling",
+    "difficulty": "easy",
+    "content": "In SQL statements, the ... clause is used to filter records that meet a specific condition (e.g., finding students with scores > 80).",
+    "image": "https://example.com/sql-syntax.jpg",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000005" },
+        "content": "WHERE",
+        "is_correct": true,
+        "answer_label": "Key",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:05:00.000Z",
+    "updatedAt": "2023-12-06T10:05:00.000Z"
+  },
+  {
+    "node_id": "68f652633e48f88fbfd691f7",
+    "type": "case-based",
+    "difficulty": "hard",
+    "content": "Read the following scenario regarding Banking Transaction Design...",
+    "image": "https://example.com/db-system-design.png",
+    "options": [],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:10:00.000Z",
+    "updatedAt": "2023-12-06T10:10:00.000Z"
+  },
+  {
+    "node_id": "68f652633e48f88fbfd691f7",
+    "type": "mcq",
+    "difficulty": "hard",
+    "content": "Which Normal Form satisfies the requirement that every non-prime attribute must be fully functionally dependent on the primary key?",
+    "image": "https://example.com/functional-dependency.png",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000006" },
+        "content": "First Normal Form (1NF)",
+        "is_correct": false,
+        "answer_label": "A",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000007" },
+        "content": "Second Normal Form (2NF)",
+        "is_correct": true,
+        "answer_label": "B",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000008" },
+        "content": "Third Normal Form (3NF)",
+        "is_correct": false,
+        "answer_label": "C",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000009" },
+        "content": "Boyce-Codd Normal Form (BCNF)",
+        "is_correct": false,
+        "answer_label": "D",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:15:00.000Z",
+    "updatedAt": "2023-12-06T10:15:00.000Z"
+  },
+  {
+    "node_id": "68f652633e48f88fbfd691f5",
+    "type": "blank-filling",
+    "difficulty": "medium",
+    "content": "A data structure that improves the speed of data retrieval operations on a database table at the cost of additional writes is called an ...",
+    "image": "",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000010" },
+        "content": "Index",
+        "is_correct": true,
+        "answer_label": "Key",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:20:00.000Z",
+    "updatedAt": "2023-12-06T10:20:00.000Z"
+  },
+  {
+    "node_id": "68f652633e48f88fbfd691f7",
+    "type": "case-based",
+    "difficulty": "hard",
+    "content": "Scenario: 'TechStore', a large e-commerce platform schema optimization...",
+    "image": "https://example.com/ecommerce-schema.jpg",
+    "options": [],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:25:00.000Z",
+    "updatedAt": "2023-12-06T10:25:00.000Z"
+  },
+  {
+    "node_id": "68f652633e48f88fbfd691f6",
+    "type": "mcq",
+    "difficulty": "medium",
+    "content": "Which SQL keyword is used to return all records from the left table, and the matched records from the right table?",
+    "image": "https://example.com/sql-joins.png",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000011" },
+        "content": "INNER JOIN",
+        "is_correct": false,
+        "answer_label": "A",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000012" },
+        "content": "LEFT JOIN",
+        "is_correct": true,
+        "answer_label": "B",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000013" },
+        "content": "RIGHT JOIN",
+        "is_correct": false,
+        "answer_label": "C",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000014" },
+        "content": "CROSS JOIN",
+        "is_correct": false,
+        "answer_label": "D",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:30:00.000Z",
+    "updatedAt": "2023-12-06T10:30:00.000Z"
+  },
+  {
+    "node_id": "68f651b43e48f88fbfd691f4",
+    "type": "blank-filling",
+    "difficulty": "hard",
+    "content": "The CAP theorem implies that in the presence of a network partition, one has to choose between Consistency and ...",
+    "image": "",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000015" },
+        "content": "Availability",
+        "is_correct": true,
+        "answer_label": "Key",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:35:00.000Z",
+    "updatedAt": "2023-12-06T10:35:00.000Z"
+  },
+  {
+    "node_id": "68f651b43e48f88fbfd691f4",
+    "type": "mcq",
+    "difficulty": "easy",
+    "content": "A field (or collection of fields) in one table that refers to the PRIMARY KEY in another table is known as a ...",
+    "image": "",
+    "options": [
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000016" },
+        "content": "Primary Key",
+        "is_correct": false,
+        "answer_label": "A",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000017" },
+        "content": "Foreign Key",
+        "is_correct": true,
+        "answer_label": "B",
+        "image": "https://example.com/foreign-key-diagram.jpg"
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000018" },
+        "content": "Unique Key",
+        "is_correct": false,
+        "answer_label": "C",
+        "image": ""
+      },
+      {
+        "_id": { "$oid": "6571a1b2c3d4e5f678000019" },
+        "content": "Composite Key",
+        "is_correct": false,
+        "answer_label": "D",
+        "image": ""
+      }
+    ],
+    "questions_list": [],
+    "createdAt": "2023-12-06T10:40:00.000Z",
+    "updatedAt": "2023-12-06T10:40:00.000Z"
+  }
+]

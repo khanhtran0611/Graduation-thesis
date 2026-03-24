@@ -1,0 +1,130 @@
+/* --- BASE RESET & FONT --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  background-color: #fff; /* Nền trắng bóc */
+  color: #000; /* Chữ đen xì */
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+
+/* --- EXAM PAPER CONTAINER --- */
+.exam-paper-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.exam-header {
+  padding-bottom: 24px;
+  border-bottom: 2px solid #000; /* Kẻ viền đen cứng cáp */
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.exam-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.exam-meta {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+/* --- QUESTION BLOCK --- */
+.question-block {
+  margin-bottom: 32px;
+}
+
+.question-content {
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+  color: #000;
+}
+
+/* --- MCQ --- */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-left: 8px; /* Thụt vào một chút cho dễ nhìn */
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #000; /* Chỉ có viền tròn đen */
+  border-radius: 50%;
+  font-weight: bold;
+  font-size: 0.85rem;
+  margin-right: 12px;
+  margin-top: 2px; /* Căn chỉnh cho vừa dòng text */
+  flex-shrink: 0;
+}
+
+.option-text {
+  font-size: 1.05rem;
+}
+
+/* Highlight MCQ: Chỉ tô đen cái vòng tròn */
+.option-item.correct .option-label {
+  background-color: #000;
+  color: #fff;
+}
+
+.option-item.correct .option-text {
+  font-weight: bold; /* In đậm text đáp án đúng nếu muốn, ko thì bỏ dòng này đi */
+}
+
+/* --- BLANK FILLING --- */
+.blank-line {
+  font-weight: normal;
+  letter-spacing: 2px;
+}
+
+.blank-answer-box {
+  margin-top: 8px;
+  padding-left: 8px;
+}
+
+.answer-title {
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.answer-text {
+  font-weight: bold;
+  text-decoration: underline; /* Gạch chân đáp án điền khuyết */
+}
+
+/* --- GROUPED QUESTION --- */
+.group-scenario {
+  font-size: 1.1rem;
+  font-weight: bold; /* To, đen, rõ ràng */
+  color: #000;
+  margin-bottom: 24px;
+  text-align: justify;
+}
+
+.sub-questions-container {
+  padding-left: 20px; /* Thụt lề câu hỏi con */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CMS - Edit Question</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="question_detail.css">
+</head>
+<body>
+
+    <div class="admin-wrapper">
+        
+        <header class="page-header">
+            <div class="header-title">
+                <h1>Edit Question</h1>
+                <span class="id-badge">ID: #65a9...8f1</span>
+                <div style="margin-top: 8px; font-size: 0.85rem; color: #6B7280;">
+                    <span style="margin-right: 16px;"><i class="fa-regular fa-clock"></i> Created: 2023-10-25 14:30</span>
+                    <span><i class="fa-solid fa-pen-to-square"></i> Last Updated: 2023-12-01 09:15</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-secondary">Cancel</button>
+                <button class="btn btn-primary"><i class="fa-solid fa-save"></i> Save Changes</button>
+            </div>
+        </header>
+
+        <form>
+            <section class="card">
+                <div class="section-title">General Information</div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Node ID <span class="required">*</span></label>
+                        <input type="text" class="form-input" value="node_math_123" placeholder="Reference ID">
+                    </div>
+                    <div class="form-group">
+                        <label>Question Type</label>
+                        <select class="form-select">
+                            <option value="multiple_choice" selected>Multiple Choice</option>
+                            <option value="single_choice">Single Choice</option>
+                            <option value="fill_blank">Fill in Blank</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select class="form-select">
+                            <option value="easy">Easy</option>
+                            <option value="medium" selected>Medium</option>
+                            <option value="hard">Hard</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-title">Question Content</div>
+                
+                <div class="form-group">
+                    <label>Question Text (Prompt)</label>
+                    <div class="rich-editor">
+                        <div class="editor-toolbar">
+                            <i class="fa-solid fa-bold" title="Bold"></i>
+                            <i class="fa-solid fa-italic" title="Italic"></i>
+                            <i class="fa-solid fa-underline" title="Underline"></i>
+                            <i class="fa-solid fa-list-ul" title="List"></i>
+                            <i class="fa-solid fa-code" title="Code Block"></i>
+                            <i class="fa-solid fa-superscript" title="Superscript"></i>
+                        </div>
+                        <textarea class="editor-content">Which design pattern provides a way to access the elements of an aggregate object sequentially without exposing its underlying representation?</textarea>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Attached Image (Optional)</label>
+                    <div class="image-uploader">
+                        <div class="img-preview-box">
+                            <i class="fa-regular fa-image" style="color:#ccc; font-size: 24px;"></i>
+                        </div>
+                        <div class="upload-controls">
+                            <button type="button" class="btn btn-secondary">Choose File...</button>
+                            <input type="text" class="form-input url-input" placeholder="Or paste image URL here...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="section-title">
+                    <span>Answer Options</span>
+                    <button type="button" class="btn-text" style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-file-import"></i> Import Bulk
+                    </button>
+                </div>
+
+                <table class="options-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px; text-align: center;">Correct</th>
+                            <th style="width: 50px; text-align: center;">Label</th>
+                            <th>Option Content</th>
+                            <th style="width: 80px; text-align: center;">Media</th>
+                            <th style="width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="correct_answer_a" class="checkbox-correct" title="Mark as correct">
+                            </td>
+                            <td><span class="badge-label">A</span></td>
+                            <td>
+                                <input type="text" class="form-input" value="Observer Pattern">
+                            </td>
+                            <td align="center">
+                                <div class="mini-upload" title="Upload Image">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn-icon-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr class="row-correct">
+                            <td>
+                                <input type="checkbox" name="correct_answer_b" checked class="checkbox-correct" title="Mark as correct">
+                            </td>
+                            <td><span class="badge-label">B</span></td>
+                            <td>
+                                <input type="text" class="form-input" value="Iterator Pattern">
+                            </td>
+                            <td align="center">
+                                <div class="mini-upload has-file" title="Change Image">
+                                    <img src="https://refactoring.guru/images/patterns/cards/iterator-mini.png" alt="opt">
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn-icon-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="correct_answer_c" class="checkbox-correct">
+                            </td>
+                            <td><span class="badge-label">C</span></td>
+                            <td>
+                                <input type="text" class="form-input" value="Singleton Pattern">
+                            </td>
+                            <td align="center">
+                                <div class="mini-upload">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn-icon-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="correct_answer_d" class="checkbox-correct">
+                            </td>
+                            <td><span class="badge-label">D</span></td>
+                            <td>
+                                <input type="text" class="form-input" value="Factory Method">
+                            </td>
+                            <td align="center">
+                                <div class="mini-upload">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                </div>
+                            </td>
+                            <td>
+                                <button type="button" class="btn-icon-danger"><i class="fa-solid fa-trash"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn-add-option">
+                    <i class="fa-solid fa-plus"></i> Add Another Option
+                </button>
+            </section>
+
+            <section class="card">
+                <div class="section-title">
+                    <span>Linked Questions </span>
+                    <button type="button" class="btn-text" style="font-size: 0.85rem;">
+                        <i class="fa-solid fa-plus" style="padding: 6px 8px; background: #EFF6FF; border: 1px solid #2563EB; border-radius: 4px; color: #2563EB;"></i> 
+                    </button>
+                </div>
+                
+                <div class="linked-questions-panel">
+                    <div class="linked-item">
+                        <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                        <span class="q-tag">#q_002</span>
+                        <span class="q-preview">What is the main complexity of the Iterator pattern implementation...</span>
+                        <button type="button" class="btn-text">View</button>
+                        <button type="button" class="btn-icon-danger"><i class="fa-solid fa-times"></i></button>
+                    </div>
+
+                    <div class="linked-item">
+                        <span class="drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>
+                        <span class="q-tag">#q_005</span>
+                        <span class="q-preview">Compare Iterator vs Visitor pattern...</span>
+                        <button type="button" class="btn-text">View</button>
+                        <button type="button" class="btn-icon-danger"><i class="fa-solid fa-times"></i></button>
+                    </div>
+
+                    <div style="margin-top: 12px; text-align: center;">
+                        <button type="button" class="btn btn-secondary" style="font-size: 0.85rem;">
+                            <i class="fa-solid fa-link"></i> Link Existing Question
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </form>
+    </div>
+
+</body>
+</html>

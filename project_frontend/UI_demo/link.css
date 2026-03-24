@@ -1,0 +1,312 @@
+/* Reset cơ bản cho component này (tránh ảnh hưởng base của dự án) */
+.modal-overlay-linkq * {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* 1. Lớp overlay làm mờ */
+.modal-overlay-linkq {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+/* 2. Khung Modal */
+.modal-container-linkq {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 900px;
+  max-height: 90vh;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+/* 3. Header & Breadcrumb */
+.modal-header-linkq {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  background-color: #f9fafb;
+}
+
+.breadcrumb-linkq {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.breadcrumb-linkq a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.breadcrumb-linkq a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumb-linkq span {
+  margin: 0 6px;
+  color: #9ca3af;
+}
+
+.current-node-linkq {
+  font-weight: 600;
+  color: #111827;
+}
+
+.btn-close-linkq {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6b7280;
+}
+
+.btn-close-linkq:hover {
+  color: #111827;
+}
+
+/* 4. Toolbar (Nút Back) */
+.modal-toolbar-linkq {
+  padding: 12px 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.btn-back-linkq {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4b5563;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-back-linkq:hover {
+  color: #111827;
+}
+
+/* 5. Nội dung cuộn được */
+.modal-body-linkq {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section-block-linkq h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #374151;
+}
+
+/* Header cho phần Search */
+.section-header-flex-linkq {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.section-header-flex-linkq h3 {
+  margin-bottom: 0; /* Ghi đè margin-bottom ở trên */
+}
+
+.search-container-linkq {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.search-input-linkq {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  width: 200px;
+  height: 34px;
+  transition: all 0.2s ease;
+}
+
+.search-input-linkq:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.search-select-linkq {
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 34px;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+}
+
+.search-select-linkq:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+.btn-search-linkq {
+  padding: 0 16px;
+  height: 34px;
+  background-color: #10b981;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-search-linkq:hover {
+  background-color: #059669;
+}
+
+/* 6. Base Style cho Table (Đã giới hạn trong modal để không dính ra ngoài) */
+.modal-container-linkq table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.modal-container-linkq th,
+.modal-container-linkq td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.modal-container-linkq th {
+  background-color: #f3f4f6;
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.modal-container-linkq tbody tr:hover {
+  background-color: #f9fafb;
+}
+
+/* 7. Xử lý Bảng Câu hỏi */
+.table-questions-linkq {
+  table-layout: fixed;
+}
+
+.col-checkbox-linkq {
+  width: 44px;
+  text-align: center;
+}
+.col-id-linkq {
+  width: 180px;
+}
+.col-content-linkq {
+  width: auto;
+}
+.col-action-linkq {
+  width: 80px;
+  text-align: center;
+}
+
+.col-id-text-linkq {
+  font-family: monospace;
+  color: #6b7280;
+}
+
+.text-truncate-linkq {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* 8. Checkbox & Nút View */
+.modal-container-linkq input[type="checkbox"] {
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
+}
+
+.btn-view-linkq {
+  background-color: #ecfdf5;
+  color: #10b981;
+  border: 1px solid #a7f3d0;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.btn-view-linkq:hover {
+  background-color: #d1fae5;
+  color: #059669;
+}
+
+/* 9. Footer */
+.modal-footer-linkq {
+  padding: 16px 20px;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: #f9fafb;
+}
+
+.btn-cancel-linkq {
+  padding: 8px 16px;
+  border: 1px solid #d1d5db;
+  background: white;
+  color: #374151;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-cancel-linkq:hover {
+  background: #f3f4f6;
+}
+
+.btn-primary-linkq {
+  padding: 8px 16px;
+  border: none;
+  background-color: #10b981;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary-linkq:hover {
+  background-color: #059669;
+}

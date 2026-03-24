@@ -1,0 +1,64 @@
+/* Khối bọc ngoài cùng phủ toàn màn hình */
+.overlay-loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    /* SỬ DỤNG RGBA: Màu đen (0,0,0) với độ mờ 60% (0.6) */
+    /* Bạn có thể tăng/giảm số 0.6 này (từ 0.1 đến 0.9) để chỉnh độ trong suốt theo ý thích */
+    background-color: rgba(0, 0, 0, 0.6); 
+    
+    /* Thêm hiệu ứng blur (làm mờ cảnh nền bên dưới) - tuỳ chọn, trông sẽ rất "ảo" và hiện đại */
+    backdrop-filter: blur(3px);
+    
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 9999;
+}
+
+/* Khối bọc vòng tròn và chữ */
+.container-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+}
+
+/* Vòng tròn xoay */
+.spinner-loading {
+    width: 60px;
+    height: 60px;
+    /* Đổi viền nền thành màu trắng trong suốt để hợp với nền tối */
+    border: 6px solid rgba(255, 255, 255, 0.2);
+    border-top: 6px solid #007bff; /* Giữ nguyên màu xanh dương đang xoay */
+    border-radius: 50%;
+    box-sizing: border-box;
+    animation: spin-loading 1s linear infinite;
+}
+
+/* Chữ Loading */
+.text-loading {
+    margin-top: 20px;
+    color: #007bff;
+    font-size: 20px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    box-sizing: border-box;
+    animation: pulse-loading 1.5s ease-in-out infinite;
+}
+
+/* --- ĐỊNH NGHĨA ANIMATIONS --- */
+
+@keyframes spin-loading {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes pulse-loading {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}

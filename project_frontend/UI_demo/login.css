@@ -1,0 +1,73 @@
+/* Reset CSS cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  /* Đặt chiều cao bằng 100% màn hình hiện tại */
+  height: 100vh;
+  /* Dùng Flexbox để căn giữa hoàn toàn theo cả 2 chiều */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f9fa; /* Sửa thành nền màu sáng (trắng xám nhạt) */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Khối bọc cả vòng tròn và chữ */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Tạo hình vòng tròn xoay */
+.spinner {
+  width: 60px;
+  height: 60px;
+  /* Viền mờ làm nền cho vòng tròn trên giao diện sáng */
+  border: 6px solid #e9ecef;
+  /* Một phần viền màu xanh dương sáng để tạo hiệu ứng quay */
+  border-top: 6px solid #007bff;
+  border-radius: 50%; /* Bo tròn thành hình tròn */
+
+  /* Gọi hiệu ứng 'spin', quay trong 1 giây, đều đặn, vô hạn */
+  animation: spin 1s linear infinite;
+}
+
+/* Chỉnh kiểu dáng cho chữ Loading */
+.loading-text {
+  margin-top: 20px;
+  color: #007bff; /* Cùng màu xanh dương với viền đang quay */
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 2px; /* Khoảng cách giữa các chữ cái rộng ra một chút */
+
+  /* Thêm hiệu ứng nhấp nháy mờ mờ cho chữ thêm sinh động */
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* --- ĐỊNH NGHĨA CÁC HIỆU ỨNG (ANIMATIONS) --- */
+
+/* Hiệu ứng quay 360 độ */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* Hiệu ứng làm chữ mờ đi rồi sáng lại */
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

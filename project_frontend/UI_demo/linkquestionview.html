@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Node Modal</title>
+    <link rel="stylesheet" href="link.css" />
+  </head>
+  <body>
+    <div class="modal-overlay-linkq">
+      <div class="modal-container-linkq">
+        <div class="modal-header-linkq">
+          <div class="breadcrumb-linkq">
+            <a href="#">Course Root</a> <span>/</span> <a href="#">Chapter 1</a>
+            <span>/</span>
+            <span class="current-node-linkq">Current Node: Lesson 1</span>
+          </div>
+          <button class="btn-close-linkq" title="Close">&times;</button>
+        </div>
+
+        <div class="modal-toolbar-linkq">
+          <button class="btn-back-linkq">← Back to parent node</button>
+        </div>
+
+        <div class="modal-body-linkq">
+          <div class="section-block-linkq">
+            <h3>Child Nodes</h3>
+            <table class="table-nodes-linkq">
+              <thead>
+                <tr>
+                  <th>Node Name</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Lesson 1.1: Basic Concepts</td>
+                </tr>
+                <tr>
+                  <td>Lesson 1.2: Data Structures</td>
+                </tr>
+                <tr>
+                  <td>Lesson 1.3: Sorting Algorithms</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="section-block-linkq">
+            <div class="section-header-flex-linkq">
+              <h3>Questions in Node</h3>
+
+              <div class="search-container-linkq">
+                <input
+                  type="text"
+                  class="search-input-linkq"
+                  placeholder="Search..."
+                />
+                <select class="search-select-linkq">
+                  <option value="id">By ID</option>
+                  <option value="content">By Content</option>
+                  <option value="type">By Type</option>
+                  <option value="difficulty">By Difficulty</option>
+                </select>
+                <button class="btn-search-linkq">Search</button>
+              </div>
+            </div>
+
+            <table class="table-questions-linkq">
+              <thead>
+                <tr>
+                  <th class="col-checkbox-linkq">
+                    <input type="checkbox" title="Select All" />
+                  </th>
+                  <th class="col-id-linkq">ID</th>
+                  <th class="col-content-linkq">Content</th>
+                  <th class="col-action-linkq">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td
+                    class="text-truncate-linkq col-id-text-linkq"
+                    title="Q-10293-VERY-LONG-ID-STRING-TO-TEST"
+                  >
+                    Q-10293-VERY-LONG-ID-STRING-TO-TEST
+                  </td>
+                  <td
+                    class="text-truncate-linkq"
+                    title="What is the average time complexity of Quick Sort in the best case?"
+                  >
+                    What is the average time complexity of Quick Sort in the
+                    best case?
+                  </td>
+                  <td><button class="btn-view-linkq">View</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td
+                    class="text-truncate-linkq col-id-text-linkq"
+                    title="Q-10294"
+                  >
+                    Q-10294
+                  </td>
+                  <td
+                    class="text-truncate-linkq"
+                    title="Explain the difference between Stack and Queue. Give real-world examples."
+                  >
+                    Explain the difference between Stack and Queue. Give
+                    real-world examples.
+                  </td>
+                  <td><button class="btn-view-linkq">View</button></td>
+                </tr>
+                <tr>
+                  <td><input type="checkbox" /></td>
+                  <td
+                    class="text-truncate-linkq col-id-text-linkq"
+                    title="Q-10295-ANOTHER-LONG-ID"
+                  >
+                    Q-10295-ANOTHER-LONG-ID
+                  </td>
+                  <td
+                    class="text-truncate-linkq"
+                    title="What is a Binary Search Tree?"
+                  >
+                    What is a Binary Search Tree?
+                  </td>
+                  <td><button class="btn-view-linkq">View</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="modal-footer-linkq">
+          <button class="btn-cancel-linkq">Cancel</button>
+          <button class="btn-primary-linkq">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

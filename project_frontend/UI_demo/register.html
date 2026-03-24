@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký</title>
+    <link rel="stylesheet" href="register.css">
+</head>
+<body>
+    <div class="register-container">
+        <h2>Tạo tài khoản mới</h2>
+        <form action="#">
+            <div class="input-group">
+                <label for="fullname">Họ và tên</label>
+                <input type="text" id="fullname" name="fullname" placeholder="Nhập họ và tên" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Địa chỉ Email</label>
+                <input type="email" id="email" name="email" placeholder="Nhập email" required>
+            </div>
+            <div class="input-group">
+                <label for="reg-password">Mật khẩu</label>
+                <input type="password" id="reg-password" name="reg-password" placeholder="Tạo mật khẩu" required>
+            </div>
+            <div class="input-group">
+                <label for="confirm-password">Xác nhận mật khẩu</label>
+                <input type="password" id="confirm-password" name="confirm-password" placeholder="Nhập lại mật khẩu" required>
+            </div>
+            <button type="submit" class="btn">Đăng ký</button>
+            
+            <p class="switch-page">
+                Đã có tài khoản? <a href="login.html">Đăng nhập</a>
+            </p>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Modal Ảnh Chuẩn</title>
+    <link rel="stylesheet" href="image_overlay.css" />
+  </head>
+  <body>
+    <div
+      style="max-width: 800px; margin: 0 auto; padding: 20px; line-height: 1.8"
+    >
+      <h1>Test Modal Ảnh (Có Background)</h1>
+      <button id="openBtn">Bấm mở ảnh to</button>
+      <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque nisl
+        eros, pulvinar facilisis justo mollis, auctor consequat urna. Morbi a
+        bibendum metus. Donec scelerisque sollicitudin enim eu venenatis.
+      </p>
+      <p>Cuộn xuống để xem overlay có che hết không...</p>
+      <div
+        style="
+          height: 1000px;
+          background: linear-gradient(#eee, #ccc);
+          margin-top: 20px;
+          padding: 20px;
+        "
+      >
+        (Vùng background dài 1000px để cuộn chuột)
+      </div>
+    </div>
+
+    <div id="myModal" class="modal-overlay">
+      <div class="modal-content">
+        <span id="closeBtn" class="close-btn">&times;</span>
+
+        <img
+          class="modal-img"
+          src="https://picsum.photos/1000/1500"
+          alt="Ảnh test tràn khung"
+        />
+      </div>
+    </div>
+
+    <script>
+      const modal = document.getElementById("myModal");
+
+      // Mở
+      document.getElementById("openBtn").onclick = () => {
+        modal.classList.add("show");
+        document.body.style.overflow = "hidden"; // Khóa cuộn trang nền
+      };
+
+      // Đóng bằng nút X
+      document.getElementById("closeBtn").onclick = () => {
+        modal.classList.remove("show");
+        document.body.style.overflow = "auto";
+      };
+
+      // Đóng khi click ra ngoài vùng tối
+      modal.onclick = (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("show");
+          document.body.style.overflow = "auto";
+        }
+      };
+    </script>
+  </body>
+</html>

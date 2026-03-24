@@ -1,0 +1,16 @@
+[
+  {
+    "_id": { "$oid": "68f661a1e48f88fbfd691fa1" },
+    "name": "1.3 - SQL Language",
+    "parent_id": "68f64fb83e48f88fbfd691f0",
+    "is_leaf_node": 1,
+    "course_id": "68f64dac3e48f88fbfd691ed"
+  },
+  {
+    "_id": { "$oid": "68f662b2e48f88fbfd691fb2" },
+    "name": "1.4 - Database Design & Normalization",
+    "parent_id": "68f64fb83e48f88fbfd691f0",
+    "is_leaf_node": 1,
+    "course_id": "68f64dac3e48f88fbfd691ed"
+  }
+]

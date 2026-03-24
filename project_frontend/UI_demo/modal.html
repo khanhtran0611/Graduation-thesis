@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Delete Node Modal</title>
+    <link rel="stylesheet" href="modal.css" />
+  </head>
+  <body>
+    <div style="padding: 50px; text-align: center">
+      <h2>Demo Modal Xóa Node</h2>
+      <button id="openModalBtn" class="btn-trigger-delete-modal">
+        Delete Node
+      </button>
+    </div>
+
+    <div id="deleteNodeModal" class="overlay-delete-modal">
+      <div class="content-delete-modal">
+        <div class="header-delete-modal">
+          <h3>Xác nhận xóa</h3>
+          <button id="closeIconBtn" class="close-icon-delete-modal">
+            &times;
+          </button>
+        </div>
+
+        <div class="body-delete-modal">
+          <p>Do you sure to delete this node ?</p>
+        </div>
+
+        <div class="actions-delete-modal">
+          <button id="cancelBtn" class="btn-cancel-delete-modal">Cancel</button>
+          <button id="acceptBtn" class="btn-accept-delete-modal">Accept</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const modal = document.getElementById("deleteNodeModal");
+      const openBtn = document.getElementById("openModalBtn");
+      const closeIconBtn = document.getElementById("closeIconBtn");
+      const cancelBtn = document.getElementById("cancelBtn");
+      const acceptBtn = document.getElementById("acceptBtn");
+
+      // Mở modal
+      openBtn.addEventListener("click", () => {
+        modal.classList.add("show-delete-modal");
+      });
+
+      // Hàm đóng modal
+      const closeModal = () => {
+        modal.classList.remove("show-delete-modal");
+      };
+
+      // Gán sự kiện đóng cho nút Cancel và dấu X
+      closeIconBtn.addEventListener("click", closeModal);
+      cancelBtn.addEventListener("click", closeModal);
+
+      // Xử lý nút Accept
+      acceptBtn.addEventListener("click", () => {
+        alert("Đã xóa node thành công!");
+        closeModal(); // Xóa xong thì đóng modal
+      });
+
+      // Click ra ngoài để đóng
+      window.addEventListener("click", (event) => {
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
+    </script>
+  </body>
+</html>

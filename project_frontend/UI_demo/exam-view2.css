@@ -1,0 +1,543 @@
+/* --- BASE RESET & FONT --- */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+.exam-container {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  background-color: #f8fafc;
+  color: #334155;
+  line-height: 1.6;
+  padding: 40px 20px;
+}
+
+/* --- EXAM PAPER CONTAINER --- */
+.exam-paper-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: #ffffff;
+  padding: 40px 48px;
+  border-radius: 8px;
+  box-shadow:
+    0 4px 6px rgba(0, 0, 0, 0.02),
+    0 10px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
+}
+
+/* --- HEADER & THÔNG TIN THÍ SINH --- */
+.exam-header {
+  padding-bottom: 24px;
+  border-bottom: 2px solid #0f172a; /* Vạch kẻ đậm ngăn cách header và câu hỏi */
+  margin-bottom: 32px;
+}
+
+.exam-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center; /* Tiêu đề vẫn căn giữa */
+}
+
+/* Khối chứa 2 cột thông tin */
+.exam-info-board {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Cột trái: Form điền tay */
+.student-info {
+  flex: 1; /* Chiếm nhiều không gian hơn để tên dài vẫn viết đủ */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.info-line {
+  display: flex;
+  align-items: flex-end; /* Căn đáy để đường chấm chấm nằm đúng dòng */
+}
+
+.info-label {
+  font-weight: 600;
+  color: #0f172a;
+  margin-right: 12px;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.dotted-line {
+  flex: 1; /* Tự động kéo dài lấp đầy khoảng trống */
+  border-bottom: 1px dotted #64748b; /* Đường chấm chấm xám */
+  height: 1rem;
+}
+
+/* Cột phải: Thông số đề thi */
+.test-meta {
+  flex: 0 0 240px; /* Ép cứng chiều rộng cột này */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.95rem;
+  color: #334155;
+}
+
+.meta-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meta-label {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.test-code-box {
+  border: 1px solid #0f172a;
+  padding: 2px 12px;
+  font-weight: 700;
+  color: #0f172a;
+  border-radius: 4px;
+  letter-spacing: 1px;
+}
+
+/* --- DÀN TRANG 2 CỘT (FLOW TỰ NHIÊN NHƯ BÁO GIẤY) --- */
+.exam-body {
+  column-count: 2;
+  column-gap: 48px;
+}
+
+/* --- QUESTION BLOCK (CÂU CHUNG VÀ CÂU CON) --- */
+.question-block {
+  font-size: 0.85rem; /* Cỡ chữ cực nhỏ, tiết kiệm giấy */
+  margin-bottom: 36px;
+  break-inside: avoid; /* Ép cứng không cho gãy đôi 1 câu hỏi trên 2 cột */
+}
+
+.question-content {
+  display: flex; /* Ép số thứ tự và nội dung chữ nằm ngang hàng */
+  align-items: flex-start; /* Luôn neo lên sát mép trên cùng */
+  gap: 8px; /* Khoảng cách giữa số thứ tự và chữ */
+  margin-bottom: 12px;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.q-num {
+  font-weight: 700;
+  color: #0f172a;
+  flex-shrink: 0; /* Lệnh cấm: Cấm bóp méo hay thu nhỏ cái số thứ tự này */
+  margin-right: 0; /* Xóa margin cũ vì đã có gap ở trên quản lý */
+}
+
+/* --- XỬ LÝ ĐỐNG HTML TỪ EDITOR TẠO RA --- */
+.editor-content {
+  flex: 1; /* Cho phép nội dung chiếm toàn bộ không gian còn lại bên phải số thứ tự */
+  min-width: 0; /* Bí quyết chống tràn layout khi xài Flexbox */
+}
+
+/* 1. Trị bệnh xuống dòng: Xóa lề trên của thẻ <p> đầu tiên để nó nằm ngang hàng với số thứ tự */
+.editor-content > *:first-child {
+  margin-top: 0 !important;
+}
+
+/* 2. Trị bệnh phá layout: Xóa lề dưới của thẻ cuối cùng */
+.editor-content > *:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* 3. LÁ CHẮN THÉP: Vô hiệu hóa cái width: 500px mà thằng editor nhúng vào */
+.editor-content img,
+.editor-content .resizable-image-container {
+  max-width: 100% !important; /* Mày có set 500px tao cũng ép mày nhỏ lại vừa bằng cái cột */
+  height: auto !important; /* Đảm bảo tỉ lệ ảnh không bị bóp méo */
+}
+
+/* 4. Giữ cho ảnh được bo góc đẹp giống design lúc nãy (nếu muốn) */
+.editor-content img {
+  /* border: 1px solid #e2e8f0; */
+  /* border-radius: 6px; */
+  /* padding: 4px;
+  background-color: #ffffff; */
+  margin-top: 8px; /* Đẩy cách xa chữ một chút */
+  margin-bottom: 8px;
+}
+
+/* --- MCQ --- */
+.options-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-left: 24px;
+}
+
+.option-item {
+  display: flex;
+  align-items: flex-start;
+}
+
+.option-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border: 1px solid #94a3b8;
+  border-radius: 50%;
+  font-weight: 600;
+  font-size: 0.7rem;
+  margin-right: 12px;
+  margin-top: 2px;
+  flex-shrink: 0;
+  color: #475569;
+}
+
+.option-text {
+  color: #334155;
+}
+
+.option-item.correct .option-label {
+  background-color: #0f172a;
+  border-color: #0f172a;
+  color: #ffffff;
+}
+
+.option-item.correct .option-text {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* --- BLANK FILLING --- */
+.blank-line {
+  font-weight: normal;
+  letter-spacing: 2px;
+  color: #94a3b8;
+}
+
+.blank-answer-box {
+  margin-top: 8px;
+  margin-left: 24px;
+}
+
+.answer-text {
+  color: #64748b;
+}
+
+.fill-text {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+/* ========================================== */
+/* FLOATING ACTION PANEL (BẢNG ĐIỀU KHIỂN NỔI)  */
+/* ========================================== */
+.floating-action-panel {
+  position: fixed; /* Ghim cứng lên màn hình */
+  top: 40px; /* Cùng lề trên với tờ giấy A4 */
+  right: 40px; /* Nằm sát mép phải của trình duyệt */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 200px; /* Nhỏ gọn, không lấn vào tờ giấy */
+  z-index: 100; /* Đảm bảo luôn nổi lên trên cùng */
+}
+
+/* Style chung cho các nút bấm */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn .material-symbols-rounded {
+  font-size: 1.25rem;
+}
+
+/* Nút Xóa (Màu đỏ cảnh báo) */
+.delete-btn {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border: 1px solid #f87171;
+}
+
+.delete-btn:hover {
+  background-color: #fca5a5;
+}
+
+/* Khối Sinh mã đề (Bọc ngoài bằng nền trắng) */
+.generate-group {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Nút Sinh mã đề (Đen than ngầu lòi) */
+.generate-btn {
+  background-color: #0f172a;
+  color: #ffffff;
+  box-shadow: none;
+  margin-bottom: 12px; /* Đẩy ô nhập số xuống dưới */
+}
+
+.generate-btn:hover {
+  background-color: #334155;
+}
+
+/* Khu vực nhập số lượng */
+.generate-input-box {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed #cbd5e1; /* Vạch đứt ngăn cách */
+  padding-top: 12px;
+}
+
+.generate-input-box label {
+  font-size: 0.85rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+.qty-input {
+  width: 50px;
+  padding: 4px 8px;
+  border: 1px solid #94a3b8;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: bold;
+  color: #0f172a;
+  outline: none;
+}
+
+.qty-input:focus {
+  border-color: #0f172a;
+}
+
+/* --- DANH SÁCH CÁC MÁ ĐỀ ĐÃ TẠO --- */
+.existing-codes-panel {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-top: 8px; /* Cách khối Generate một chút */
+}
+
+.panel-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed #e2e8f0;
+}
+
+.codes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 250px; /* Giới hạn chiều cao nếu đẻ ra quá nhiều đề */
+  overflow-y: auto; /* Hiển thị thanh cuộn nếu danh sách dài */
+}
+
+/* Custom nhẹ thanh cuộn cho nó sang */
+.codes-list::-webkit-scrollbar {
+  width: 4px;
+}
+.codes-list::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 4px;
+}
+
+.code-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  text-align: left;
+}
+
+.code-item .material-symbols-rounded {
+  font-size: 1.1rem;
+  color: #94a3b8;
+}
+
+/* Hiệu ứng khi di chuột vào */
+.code-item:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.code-item:hover .material-symbols-rounded {
+  color: #64748b;
+}
+
+.code-item.active .material-symbols-rounded {
+  color: #0f172a; /* Đen ngầu đồng bộ */
+}
+
+/* --- XỬ LÝ OPTION CÓ ẢNH (CHIA LƯỚI 2x2) --- */
+
+/* Ghi đè thành dạng Grid 2 cột thay vì Flex dọc */
+.options-grid.has-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px 20px; /* Cách dọc 16px, cách ngang 20px */
+  padding-left: 12px; /* Thụt vào ít hơn so với chữ thường vì ảnh đã to sẵn */
+}
+
+/* Bọc chứa cả text và ảnh của option */
+.option-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* Khoảng cách giữa chữ (nếu có) và ảnh */
+  width: 100%;
+}
+
+/* Định dạng cho ảnh bên trong option */
+.option-img {
+  width: 100%; /* Phình ngang hết cỡ bề rộng của cột (A, B, C, D) */
+  height: auto; /* Chiều cao tự động tính toán để ảnh không bị bóp méo */
+  max-height: 190px; /* Chặn đứng! Không cho phép ảnh cao quá 250px để tránh tốn giấy */
+  object-fit: contain;
+}
+
+/* Hiệu ứng khi chọn đúng (Tô đậm viền ảnh cho đồng bộ) */
+.option-item.correct .option-img {
+  border-color: #0f172a;
+  border-width: 2px;
+  padding: 3px; /* Bù trừ lại 1px do viền dày lên để kích thước không đổi */
+}
+
+/* .question-content img {
+  max-width: 100%; 
+  max-height: 250px; 
+  height: auto; 
+  object-fit: contain;
+  border-radius: 6px;
+} */
+
+/* Kìm cương cái ảnh, không cho nó phá lề */
+.question-img {
+  max-width: 100%; /* Phình to tối đa bằng chiều rộng của cột, tuyệt đối không tràn */
+  max-height: 250px; /* Giới hạn chiều cao để không bị chiếm hết cả 1 trang giấy */
+  height: auto; /* Tự động tính toán để giữ đúng tỉ lệ gốc (không bị bóp méo) */
+  object-fit: contain;
+
+  /* Trang điểm nhẹ nhàng cho khớp với phong cách Enterprise */
+  border: 1px solid #e2e8f0; /* Viền xám siêu nhạt, tinh tế */
+  border-radius: 6px;
+  background-color: #ffffff;
+  padding: 6px; /* Lùi viền ra ngoài một chút */
+}
+
+/* --- NÚT EXPORT PDF --- */
+.pdf-btn {
+  background-color: #ffffff;
+  color: #0f172a;
+  border: 1px solid #cbd5e1;
+}
+
+.pdf-btn:hover {
+  background-color: #f8fafc;
+  border-color: #94a3b8;
+}
+
+/* --- KHỐI BỌC SWITCH --- */
+.toggle-group {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.toggle-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #475569;
+}
+
+/* --- NÚT GẠT SWITCH THUẦN CSS --- */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.3s;
+  border-radius: 22px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switch input:checked + .slider {
+  background-color: #0f172a;
+}
+
+.switch input:checked + .slider:before {
+  transform: translateX(18px);
+}

@@ -1,0 +1,87 @@
+/* style.css */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: sans-serif;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* --- OVERLAY TỐI MÀU --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(
+    0,
+    0,
+    0,
+    0.9
+  ); /* Làm tối hơn chút (90%) để tôn ảnh lên khi không còn viền trắng */
+  z-index: 9999;
+
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-overlay.show {
+  display: flex;
+}
+
+/* --- KHUNG CHỨA (ĐÃ BỎ VIỀN TRẮNG) --- */
+.modal-content {
+  /* Xóa sạch padding và background */
+  background: transparent;
+  padding: 0;
+  position: relative;
+
+  max-width: 90vw;
+  max-height: 90vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* --- ẢNH GỌN GÀNG TRONG KHUNG --- */
+.modal-img {
+  max-width: 100%;
+  max-height: 90vh; /* Không cần trừ phần viền nữa do đã bỏ padding */
+  object-fit: contain;
+  display: block;
+  /* Có thể thêm dòng dưới nếu muốn bo nhẹ góc ảnh, không thì bỏ đi */
+  border-radius: 4px;
+}
+
+/* --- NÚT ĐÓNG MỎNG, SANG --- */
+.close-btn {
+  position: fixed; /* Ghim chết ở góc trên cùng bên phải màn hình */
+  top: 15px;
+  right: 30px;
+  color: rgba(255, 255, 255, 0.7); /* Màu trắng hơi mờ một tí */
+  font-size: 50px; /* Size to để dễ bấm */
+  font-weight: 100; /* Ép nét chữ cực mỏng */
+  font-family:
+    "Helvetica Neue", Helvetica, Arial, sans-serif; /* Dùng font chuẩn để nét mỏng hiển thị đẹp nhất */
+  cursor: pointer;
+  z-index: 10000;
+  transition: 0.2s;
+  line-height: 1;
+}
+
+.close-btn:hover {
+  color: #fff; /* Di chuột vào thì sáng rực lên */
+}

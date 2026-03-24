@@ -1,0 +1,83 @@
+/* ========================================== */
+/* SUCCESS NOTIFICATION (TOAST)               */
+/* ========================================== */
+
+/* Đã xóa .modal-overlay */
+
+.modal-content {
+  /* Ép cố định vào góc dưới phải */
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 9999;
+
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 400px;
+  padding: 20px 24px;
+  border-radius: 8px;
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  text-align: left;
+}
+
+/* Style cho nút X góc trên bên phải */
+.close-icon-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: #94a3b8; /* Màu xám nhạt */
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.close-icon-btn:hover {
+  background-color: #f1f5f9;
+  color: #0f172a;
+}
+
+.close-icon-btn .material-symbols-rounded {
+  font-size: 20px; /* Icon X nhỏ gọn hơn icon check một chút */
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 6px;
+  padding-right: 24px; /* Tránh việc text dài đâm vào cái nút X */
+}
+
+.modal-icon {
+  font-size: 28px;
+  color: #10b981;
+}
+
+.modal-title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin: 0; /* Đảm bảo h3 không bị margin mặc định đẩy lệch */
+}
+
+.modal-body {
+  padding-left: 38px;
+  margin-bottom: 0; /* Xóa margin-bottom vì dưới nó không còn nút bấm nào nữa */
+}
+
+.modal-message {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
