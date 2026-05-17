@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   # Backend Service
@@ -8,12 +8,16 @@ services:
       dockerfile: Dockerfile
     container_name: project_backend
     restart: unless-stopped
+    network_mode: host
     ports:
       - "5000:5000"
     environment:
       - NODE_ENV=production
       - PORT=5000
       - MONGO_URI=mongodb://mongo:27017/GR2_test
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis:6379
       - MINIO_ENDPOINT=minio
       - MINIO_PORT=9000
       - MINIO_ACCESS_KEY=minioadmin
@@ -22,6 +26,7 @@ services:
       - MINIO_BUCKET=project-bucket
     depends_on:
       - mongo
+      - redis
       - minio
     networks:
       - app-network
@@ -56,8 +61,8 @@ services:
     container_name: project_minio
     restart: unless-stopped
     ports:
-      - "9000:9000"  # API Port
-      - "9001:9001"  # Console Port
+      - "9000:9000" # API Port
+      - "9001:9001" # Console Port
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
@@ -68,6 +73,25 @@ services:
     command: server /data --console-address ":9001"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+  # Redis Service
+  redis:
+    image: redis:7-alpine
+    container_name: project_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis-data:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -100,4 +124,6 @@ volumes:
   mongo-config:
     driver: local
   minio-data:
+    driver: local
+  redis-data:
     driver: local

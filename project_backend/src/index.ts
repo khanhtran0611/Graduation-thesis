@@ -6,6 +6,7 @@ import route from "./routes/routes";
 import dotenv from "dotenv";
 import { connectDB } from "../src/config/database";
 import { initializeMinIO } from "../src/config/minio";
+import { initializeRedis } from "../src/config/redis";
 dotenv.config();
 export const app = express();
 const port = process.env.PORT || 5000;
@@ -13,6 +14,7 @@ const port = process.env.PORT || 5000;
 // Initialize database and MinIO
 connectDB();
 initializeMinIO();
+initializeRedis();
 
 const allowedOrigins = [
   "http://localhost:3000", // Dành cho môi trường phát triển (Next.js/React mặc định)
@@ -38,10 +40,9 @@ const corsOptions: CorsOptions = {
   credentials: true, // Cho phép gửi cookies (quan trọng nếu dùng session/JWT trong cookie)
   optionsSuccessStatus: 204, // (Tùy chọn) Một số trình duyệt yêu cầu 204 cho Pre-flight
 };
-
+app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(morgan("dev"));
-app.use(cookieParser());
 
 // Health check endpoint for Docker
 app.get("/health", (req: Request, res: Response) => {

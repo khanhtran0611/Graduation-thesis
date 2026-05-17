@@ -14,6 +14,9 @@ services:
       - MESSAGE="Hello from .env"
       - NODE_ENV=development
       - PORT=5000
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis:6379
       - MINIO_ENDPOINT=minio
       - MINIO_PUBLIC_ENDPOINT=localhost
       - MINIO_PORT=9000
@@ -24,6 +27,7 @@ services:
       - SECRET_KEY=a4f8e1b3c9d0267519f4e8a2b6d1c03f5a79e2d8c1b04693e7f2a5d9c8b014e3
       - JWT_SECRET=a4f8e1b3c9d0267519f4e8a2b6d1c03f5a79e2d8c1b04693e7f2a5d9c8b014e3
     depends_on:
+      - redis
       - minio
     networks:
       - app-network
@@ -33,7 +37,8 @@ services:
       - ./tsconfig.json:/app/tsconfig.json
       - ./.env:/app/.env
       - ../types:/app/types
-      - /app/node_modules
+      - tectonic-cache:/root/.cache/tectonic
+      # - /app/node_modules
 
   # MinIO Service
   minio:
@@ -51,6 +56,19 @@ services:
     networks:
       - app-network
     command: server /data --console-address ":9001"
+
+  # Redis Service
+  redis:
+    image: redis:7-alpine
+    container_name: project_redis_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    networks:
+      - app-network
+    volumes:
+      - redis-data-dev:/data
+    command: ["redis-server", "--appendonly", "yes"]
 
   # MinIO Client
   minio-client:
@@ -75,4 +93,8 @@ networks:
 
 volumes:
   minio-data-dev:
+    driver: local
+  redis-data-dev:
+    driver: local
+  tectonic-cache:
     driver: local

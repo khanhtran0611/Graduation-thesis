@@ -1,17 +1,29 @@
 import { Request, Response } from "express";
 import { ExamDB } from "../models/exam.model";
 import QuestionDB from "../models/question.model";
-import { Exam } from "../types/exam";
-import { OmittedQuestion, toOmittedQuestion } from "../types/questions";
+import {
+  Exam,
+  RootExamSummary,
+  toRootExamSummary,
+  NodeInfo,
+  buildQuestionLatex,
+  LATEX_TEMPLATE_VI,
+  ExamDetail2,
+  CombinedInfo,
+} from "../types/exam";
+import { OmittedQuestion3, SubQuestion3 } from "../types/questions";
 import { ok } from "../utils/responseUtils";
+import { latexService } from "./latex-service/service/latex.service";
+import { GeneralInfo, GroupInfo } from "../types/exam";
+import { UserDB } from "../models/user.model";
 
-type QuestionMap = Record<string, (string | string[])[]>;
+type QuestionMap = Record<string, CombinedInfo>;
 
 type SaveRootExamRequestBody = {
   course_id: string;
   duration: number;
   name: string;
-  username: string;
+  user_id: string;
   total: number;
   questionMap: QuestionMap;
 };
@@ -29,6 +41,17 @@ type FindExamByCodeRequestBody = {
 type FindExamsByRootIdRequestBody = {
   id: string;
 };
+
+function getRandomElements<T>(arr: T[], n: number): T[] {
+  const shuffled = [...arr];
+
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+
+  return shuffled.slice(0, n);
+}
 
 class ExamsController {
   private shuffleArray<T>(items: T[]): T[] {
@@ -67,47 +90,20 @@ class ExamsController {
     return uniqueLists;
   }
 
-  private async getOmittedQuestionsByIds(questionIds: string[]): Promise<OmittedQuestion[]> {
-    if (!Array.isArray(questionIds) || questionIds.length === 0) {
-      return [];
-    }
-
-    const docs = await QuestionDB.find(
-      { _id: { $in: questionIds } },
-      {
-        content: 1,
-        image: 1,
-        options: 1,
-        type: 1,
-      }
-    ).lean();
-
-    const docsMap = new Map<string, OmittedQuestion>();
-
-    for (const doc of docs) {
-      const omittedQuestion = toOmittedQuestion(doc);
-      docsMap.set(omittedQuestion.id, omittedQuestion);
-    }
-
-    return questionIds
-      .map((questionId) => docsMap.get(questionId))
-      .filter((question): question is OmittedQuestion => Boolean(question));
-  }
-
   public async saveRootExam(req: Request, res: Response): Promise<Response> {
     try {
-      const { course_id, total, duration, name, username, questionMap } =
+      const { course_id, total, duration, name, user_id, questionMap } =
         req.body as SaveRootExamRequestBody;
 
       if (
         !course_id ||
         !name ||
-        !username ||
+        !user_id ||
         typeof duration !== "number" ||
         typeof total !== "number"
       ) {
         return res.status(400).json({
-          message: "course_id, duration, name, username, total are required",
+          message: "course_id, duration, name, user_id, total are required",
         });
       }
 
@@ -117,26 +113,76 @@ class ExamsController {
         });
       }
 
-      const examQuestionsList: (string | string[])[] = [];
+      const allQuestions: (string | string[])[] = [];
+      const nodeInfoList: NodeInfo[] = [];
 
-      for (const value of Object.values(questionMap)) {
-        if (!Array.isArray(value)) {
-          return res.status(400).json({
-            message: "Each questionMap value must be an array",
-          });
+      for (const [nodeId, combinedInfo] of Object.entries(questionMap)) {
+        let nodeQuestionCount = 0;
+
+        // Xử lý GeneralInfo[]
+        if (Array.isArray(combinedInfo.general_info)) {
+          for (const gen of combinedInfo.general_info) {
+            if (gen.count > 0) {
+              const randomQuestions = await QuestionDB.aggregate([
+                { $match: { node_id: nodeId, type: gen.type, difficulty: gen.difficulty } },
+                { $sample: { size: gen.count } },
+                { $project: { _id: 1 } },
+              ]);
+
+              randomQuestions.forEach((q) => {
+                allQuestions.push(q._id.toString());
+              });
+              nodeQuestionCount += randomQuestions.length;
+            }
+          }
         }
-        examQuestionsList.push(...value);
+
+        // Xử lý GroupInfo và GroupRequiredInfo
+        const reqInfo = combinedInfo.group_required_info;
+        const groupInfo = combinedInfo.group_info;
+
+        if (reqInfo && reqInfo.count > 0 && Array.isArray(groupInfo) && groupInfo.length > 0) {
+          const selectedGroups = getRandomElements(groupInfo, reqInfo.count);
+          const groupIds = selectedGroups.map((g) => g.id);
+
+          const groupQuestionsDocs = await QuestionDB.find({ _id: { $in: groupIds } }).lean();
+
+          for (const group of selectedGroups) {
+            const parentQ = groupQuestionsDocs.find((q) => q._id.toString() === group.id);
+
+            if (parentQ && Array.isArray(parentQ.questions_list)) {
+              // Chọn ngẫu nhiên các sub_questions
+              const subCountToPick = reqInfo.sub_count;
+              const selectedSubs = getRandomElements(parentQ.questions_list, subCountToPick);
+
+              const subIds = selectedSubs
+                .map((sq: any) => sq.id || sq._id?.toString())
+                .filter(Boolean);
+
+              // Tống id question cha ở đầu, sau đó là các id của subquestion
+              const groupArr = [parentQ._id.toString(), ...subIds];
+              allQuestions.push(groupArr);
+              nodeQuestionCount += 1;
+            }
+          }
+        }
+
+        nodeInfoList.push({
+          node_id: nodeId,
+          count: nodeQuestionCount,
+        });
       }
 
       const savedExam = await ExamDB.create({
         course_id,
         duration,
         name,
-        username,
-        questions_list: examQuestionsList,
+        user_id: user_id,
+        questions_list: allQuestions,
         total,
         code: "",
         total_code: 0,
+        node_info: nodeInfoList,
       });
 
       return res.status(201).json({
@@ -170,41 +216,13 @@ class ExamsController {
         return res.status(404).json({ message: "Exam not found" });
       }
 
-      const questionsList = (examDoc as any).questions_list as (string | string[])[];
-
-      const groupedQuestions: (OmittedQuestion | OmittedQuestion[])[] = [];
-      const temp: string[] = [];
-
-      for (const questionItem of questionsList) {
-        if (typeof questionItem === "string") {
-          temp.push(questionItem);
-          continue;
-        }
-
-        if (Array.isArray(questionItem)) {
-          if (temp.length > 0) {
-            const bufferedQuestions = await this.getOmittedQuestionsByIds(temp);
-            groupedQuestions.push(...bufferedQuestions);
-            temp.length = 0;
-          }
-
-          const nestedQuestions = await this.getOmittedQuestionsByIds(questionItem);
-          groupedQuestions.push(nestedQuestions);
-        }
-      }
-
-      if (temp.length > 0) {
-        const bufferedQuestions = await this.getOmittedQuestionsByIds(temp);
-        groupedQuestions.push(...bufferedQuestions);
-      }
-
       return ok(res, {
-        exam_id: (examDoc as any)._id,
+        id: (examDoc as any)._id,
         duration: (examDoc as any).duration,
         name: (examDoc as any).name,
         total: (examDoc as any).total,
         total_code: (examDoc as any).total_code,
-        questions_list: groupedQuestions,
+        questions_list: (examDoc as any).questions_list,
         code: (examDoc as any).code,
       });
     } catch (error) {
@@ -254,7 +272,7 @@ class ExamsController {
         course_id: parentExam.course_id,
         duration: parentExam.duration,
         name: parentExam.name,
-        username: parentExam.username,
+        user_id: parentExam.user_id,
         questions_list: questionsList,
         total: parentExam.total,
         total_code: -1,
@@ -327,6 +345,60 @@ class ExamsController {
     }
   }
 
+  public async getRootExamsByCourseId(req: Request, res: Response): Promise<Response> {
+    try {
+      const { course_id } = req.params;
+
+      if (!course_id) {
+        return res.status(400).json({ message: "course_id is required" });
+      }
+
+      // 1. Lấy danh sách exams (chỉ lấy user_id thay vì username)
+      const rootExamDocs = await ExamDB.find(
+        {
+          course_id,
+          $or: [{ root_id: { $exists: false } }, { root_id: null }, { root_id: "" }],
+        },
+        {
+          user_id: 1, // Thay vì username
+          duration: 1,
+          name: 1,
+          total: 1,
+          createdAt: 1,
+        }
+      ).lean();
+
+      // 2. Trích xuất danh sách user_id duy nhất để query (loại bỏ giá trị null/undefined)
+      const userIds = [...new Set(rootExamDocs.map((doc: any) => doc.user_id).filter(Boolean))];
+
+      // 3. Tìm thông tin users tương ứng từ UserDB
+      const users = await UserDB.find(
+        { _id: { $in: userIds } },
+        { name: 1 } // Lấy trường name để làm username
+      ).lean();
+
+      // 4. Tạo một Map để tra cứu name theo user_id với độ phức tạp O(1)
+      const userMap = new Map<string, string>();
+      users.forEach((user) => {
+        userMap.set(user._id.toString(), user.name || "Unknown");
+      });
+
+      // 5. Map dữ liệu để trả về, ghép nối username vào
+      const root_exams: RootExamSummary[] = rootExamDocs.map((doc: any) => {
+        // Lấy tên từ userMap, nếu không tìm thấy thì để "Unknown User"
+        const username = userMap.get(doc.user_id?.toString()) || "Unknown User";
+
+        // Truyền object đã được bổ sung username vào hàm toRootExamSummary
+        return toRootExamSummary({ ...doc, username });
+      });
+
+      return ok(res, root_exams);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
   public async deleteExamById(req: Request, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
@@ -340,7 +412,6 @@ class ExamsController {
       if (!deletedExam) {
         return res.status(404).json({ message: "Exam not found" });
       }
-
       return ok(res, {
         id,
         deleted: true,
@@ -348,6 +419,231 @@ class ExamsController {
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  public async getNodeInfo(req: Request, res: Response): Promise<Response> {
+    try {
+      const { node_id } = req.params;
+
+      if (!node_id) {
+        return res.status(400).json({ message: "node_id is required" });
+      }
+
+      // 1. Xử lý phần GeneralInfo (Bỏ qua type 'group')
+      // Sử dụng aggregation để nhóm và đếm số lượng trong database cho tối ưu
+      const rawGenerals = await QuestionDB.aggregate([
+        {
+          $match: {
+            node_id: node_id,
+            type: { $ne: "group" }, // Loại bỏ type group
+          },
+        },
+        {
+          $group: {
+            _id: { type: "$type", difficulty: "$difficulty" },
+            count: { $sum: 1 },
+          },
+        },
+      ]);
+
+      // Định nghĩa các loại type và difficulty theo yêu cầu
+      const generalTypes = ["mcq", "blank-filling"];
+      const difficulties = ["easy", "medium", "hard"];
+      const generals: GeneralInfo[] = [];
+
+      // Khởi tạo mảng generals để đảm bảo đủ 6 tổ hợp (kể cả những tổ hợp có count = 0)
+      for (const t of generalTypes) {
+        for (const d of difficulties) {
+          const found = rawGenerals.find((g: any) => g._id.type === t && g._id.difficulty === d);
+          generals.push({
+            type: t,
+            difficulty: d,
+            count: found ? found.count : 0,
+          });
+        }
+      }
+
+      // 2. Xử lý phần GroupInfo (Chỉ lấy type 'group')
+      const groupsDocs = await QuestionDB.find(
+        { node_id: node_id, type: "group" },
+        { _id: 1, questions_list: 1 }
+      ).lean();
+
+      const groups: GroupInfo[] = groupsDocs.map((doc: any) => ({
+        id: doc._id.toString(),
+        // Đếm số lượng phần tử trong questions_list, nếu không có thì trả về 0
+        sub_count: Array.isArray(doc.questions_list) ? doc.questions_list.length : 0,
+      }));
+
+      // 3. Trả về kết quả thông qua hàm `ok` từ responseUtils
+      return ok(res, {
+        generals,
+        groups,
+      });
+    } catch (err) {
+      console.error("Error in getNodeInfo:", err);
+      // Giả định bạn đã import `error` từ responseUtils, nếu chưa thì dùng res.status(500)
+      return res.status(500).json({
+        success: false,
+        status: 500,
+        message: "Internal server error",
+      });
+    }
+  }
+
+  public async compileExamLatex(req: Request, res: Response): Promise<Response> {
+    try {
+      const { exam, show, mode } = req.body as {
+        exam: ExamDetail2;
+        mode: string;
+        show: number;
+      };
+
+      if (!exam || !exam.questions_list) {
+        return res.status(400).json({ message: "exam with questions_list is required" });
+      }
+
+      if (!Array.isArray(exam.questions_list) || exam.questions_list.length === 0) {
+        return res.status(400).json({ message: "questions_list must be a non-empty array" });
+      }
+
+      if (!mode) {
+        return res.status(400).json({ message: "mode is required" });
+      }
+
+      if (typeof show !== "number" || (show !== 0 && show !== 1)) {
+        return res.status(400).json({ message: "show must be 0 or 1" });
+      }
+
+      // Tạo list orderedParentIds
+      const orderedParentIds: string[] = [];
+      exam.questions_list.forEach((item) => {
+        if (typeof item === "string") {
+          orderedParentIds.push(item);
+        } else if (Array.isArray(item) && item.length > 0) {
+          orderedParentIds.push(item[0]);
+        }
+      });
+
+      // Lấy questions từ database
+      const fetchedQuestionsDocs = await QuestionDB.find({
+        _id: { $in: orderedParentIds },
+      }).lean();
+
+      const orderedQuestions: OmittedQuestion3[] = [];
+      const extractedImages: string[] = [];
+
+      // Sắp xếp lại đúng thứ tự của list orderedParentIds và trích xuất thông tin
+      exam.questions_list.forEach((item) => {
+        const isGroup = Array.isArray(item);
+        const parentId = isGroup ? item[0] : (item as string);
+
+        const qDoc = fetchedQuestionsDocs.find((q) => q._id.toString() === parentId);
+        if (!qDoc) return;
+
+        // Trích xuất hình ảnh từ question cha
+        if (Array.isArray(qDoc.image)) {
+          extractedImages.push(...qDoc.image);
+        }
+        if (Array.isArray(qDoc.options) && qDoc.type === "mcq") {
+          qDoc.options.forEach((opt) => {
+            if (opt.image) extractedImages.push(opt.image);
+          });
+        }
+
+        let finalSubQuestions: SubQuestion3[] = [];
+
+        // Nếu là group, tiến hành lọc và trích xuất sub_questions
+        if (isGroup && Array.isArray(qDoc.questions_list)) {
+          const subIds = (item as string[]).slice(1);
+
+          const matchedSubs = qDoc.questions_list.filter((sq: any) =>
+            subIds.includes(sq.id || sq._id?.toString())
+          );
+
+          matchedSubs.forEach((sq: any) => {
+            // Trích xuất ảnh của sub_question
+            if (Array.isArray(sq.image)) {
+              extractedImages.push(...sq.image);
+            }
+            if (Array.isArray(sq.options) && sq.type === "mcq") {
+              sq.options.forEach((opt: any) => {
+                if (opt.image) extractedImages.push(opt.image);
+              });
+            }
+            console.log(extractedImages);
+
+            finalSubQuestions.push({
+              content: sq.content,
+              options: sq.options || [],
+              type: sq.type,
+              option_max_size: sq.option_max_size,
+            });
+          });
+        }
+
+        orderedQuestions.push({
+          content: qDoc.content,
+          options: qDoc.options || [],
+          type: qDoc.type,
+          option_max_size: qDoc.option_max_size,
+          questions_list: finalSubQuestions,
+        });
+      });
+
+      // Lọc ảnh bị trùng (Deduplicate images)
+      const finalImagesList = [...new Set(extractedImages.filter(Boolean))];
+      console.log("Final images list for LaTeX compilation:", finalImagesList);
+
+      // Bắt đầu build Latex Blocks
+      let allQuestionsLatex = String.raw`\begin{enumerate}
+      `;
+
+      orderedQuestions.forEach((question) => {
+        const questionLatex = buildQuestionLatex(question, mode, show);
+        allQuestionsLatex += questionLatex;
+      });
+
+      allQuestionsLatex += String.raw`\end{enumerate}`;
+
+      // Wrap with multicols if mode is double
+      if (mode === "double") {
+        allQuestionsLatex =
+          String.raw`\begin{multicols}{2}
+` +
+          allQuestionsLatex +
+          String.raw`
+\end{multicols}`;
+      }
+
+      // Replace placeholders in template
+      let latexContent = LATEX_TEMPLATE_VI.replace("%%EXAM TITLE%%", exam.name)
+        .replace("%%Code%%", exam.code)
+        .replace("%%Minutes%%", String(exam.duration))
+        .replace("%%Number%%", String(exam.total))
+        .replace("%%QUESTION_CONTENT%%", allQuestionsLatex);
+
+      // Compile to PDF
+      const pdfBuffer = await latexService.compileTexCodeToPdf(finalImagesList, latexContent);
+
+      res.setHeader("Content-Type", "application/pdf");
+      res.setHeader("Content-Disposition", "attachment; filename=exam.pdf");
+
+      return res.status(200).send(pdfBuffer);
+    } catch (error) {
+      console.error("Error compiling exam LaTeX:", error);
+      if (error instanceof Error && error.message.startsWith("LATEX_COMPILE_FAILED:")) {
+        return res.status(502).json({
+          message: "Failed to compile exam LaTeX",
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        message: "Failed to compile exam",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
     }
   }
 }

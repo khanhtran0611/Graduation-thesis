@@ -21,6 +21,11 @@ FROM node:20-alpine
 
 WORKDIR /app
 
+# Cài đặt Tectonic, fontconfig và bộ Microsoft Core Fonts (bao gồm Times New Roman)
+RUN apk add --no-cache tectonic msttcorefonts-installer fontconfig && \
+    update-ms-fonts && \
+    fc-cache -f
+
 # Copy package files
 COPY package*.json ./
 

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Assign Courses to User Modal</title>
+    <link rel="stylesheet" href="permission.css" />
+  </head>
+  <body>
+    <div class="modal-overlay">
+      <div class="modal-container">
+        <aside class="modal-sidebar">
+          <div class="modal-sidebar-header">
+            <div class="sidebar-title-row">
+              <h2>Available Courses</h2>
+              <select class="filter-select" title="Select search criteria">
+                <option value="name">Name</option>
+                <option value="code">Code</option>
+              </select>
+            </div>
+            <input
+              type="text"
+              class="search-box"
+              placeholder="Search courses..."
+            />
+          </div>
+          <ul class="resource-pool">
+            <li class="pool-item">
+              <div class="pool-info">
+                <span class="name">Web Development Bootcamp</span>
+                <span class="type">IT1110</span>
+              </div>
+              <div class="add-icon">+</div>
+            </li>
+            <li class="pool-item">
+              <div class="pool-info">
+                <span class="name">Introduction to Databases</span>
+                <span class="type">DB2020</span>
+              </div>
+              <div class="add-icon">+</div>
+            </li>
+            <li class="pool-item">
+              <div class="pool-info">
+                <span class="name">Data Structures & Algorithms</span>
+                <span class="type">CS3030</span>
+              </div>
+              <div class="add-icon">+</div>
+            </li>
+            <li class="pool-item">
+              <div class="pool-info">
+                <span class="name">Digital Marketing 101</span>
+                <span class="type">MK1050</span>
+              </div>
+              <div class="add-icon">+</div>
+            </li>
+          </ul>
+        </aside>
+
+        <main class="modal-main-content">
+          <div class="modal-content-header">
+            <div>
+              <h1>Course Permissions</h1>
+              <p>
+                Assigning to User:
+                <strong class="highlight-user">Nguyen Van Teo</strong>
+              </p>
+            </div>
+            <button class="btn-primary">Save Changes</button>
+          </div>
+
+          <div class="assigned-resources">
+            <div class="section-title">
+              <h3>Assigned Courses</h3>
+              <span class="badge">3</span>
+            </div>
+
+            <div class="resource-table-header">
+              <div class="col-name">Course Details</div>
+              <div class="col-level">Access Level (Low / High)</div>
+              <div class="col-action">Action</div>
+            </div>
+
+            <div class="resource-list">
+              <div class="resource-item">
+                <div class="col-name">
+                  <strong>Machine Learning Fundamentals</strong>
+                  <span class="res-type">ML4040</span>
+                </div>
+                <div class="col-level">
+                  <div class="segmented-control">
+                    <input
+                      type="radio"
+                      name="course1"
+                      id="course1-low"
+                      checked
+                    />
+                    <label for="course1-low">Low</label>
+
+                    <input type="radio" name="course1" id="course1-high" />
+                    <label for="course1-high">High</label>
+                  </div>
+                </div>
+                <div class="col-action">
+                  <button class="btn-icon delete" title="Remove course">
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div class="resource-item">
+                <div class="col-name">
+                  <strong>Advanced React.js</strong>
+                  <span class="res-type">IT2220</span>
+                </div>
+                <div class="col-level">
+                  <div class="segmented-control">
+                    <input type="radio" name="course2" id="course2-low" />
+                    <label for="course2-low">Low</label>
+
+                    <input
+                      type="radio"
+                      name="course2"
+                      id="course2-high"
+                      checked
+                    />
+                    <label for="course2-high">High</label>
+                  </div>
+                </div>
+                <div class="col-action">
+                  <button class="btn-icon delete" title="Remove course">
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div class="resource-item">
+                <div class="col-name">
+                  <strong>Cloud Computing with AWS</strong>
+                  <span class="res-type">CC5050</span>
+                </div>
+                <div class="col-level">
+                  <div class="segmented-control">
+                    <input
+                      type="radio"
+                      name="course3"
+                      id="course3-low"
+                      checked
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  </body>
+</html>

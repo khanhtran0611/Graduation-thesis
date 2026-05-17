@@ -13,7 +13,7 @@ const courseSchema = new Schema<CourseDocument>({
   subject_code: { type: String, required: true },
   credits: { type: Number, required: true },
   department: { type: String, required: true },
-  description: { type: String, required: true },
+  description: { type: String, required: false },
 });
 
 export const CourseDB = mongoose.model<CourseDocument>("Course", courseSchema);

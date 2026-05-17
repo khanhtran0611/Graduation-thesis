@@ -1,0 +1,1005 @@
+/* ROOT VARIABLES */
+/* ROOT VARIABLES - TRẢ LẠI CHÍNH XÁC MÀU NỀN SÁNG BẢN GỐC */
+:root {
+  /* Colors */
+  --bg-body: #fafafb; /* Chuyển sang màu nền sáng, xám rất nhẹ giống ảnh */
+  --bg-sidebar: #ffffff;
+  --bg-card: #ffffff;
+  --bg-topbar: transparent; /* Nền topbar trong suốt */
+
+  --text-main: #1b1f24;
+  --text-muted: #5c6370;
+  --text-sidebar: #a0a5b1;
+
+  --accent-blue: #00a8ff;
+  --accent-blue-light: #f4fafe;
+
+  --status-green: #62c471;
+
+  --badge-code-bg: #e0f2fe;
+  --badge-code-text: #0284c7;
+
+  --border-color: #e4e9f0;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  height: 100vh;
+  overflow: hidden;
+}
+.app-container {
+  display: flex;
+  height: 100vh;
+}
+
+/* =========================================
+   SIDEBAR
+========================================= */
+.sidebar {
+  width: 100px;
+  background-color: var(--bg-sidebar);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  z-index: 10;
+}
+
+.sidebar-logo {
+  color: var(--accent-blue);
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.sidebar-logo .icon {
+  font-size: 28px;
+}
+
+.sidebar-nav {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  padding: 24px 0;
+  color: var(--text-sidebar);
+  border-left: 3px solid transparent;
+  transition: all 0.2s ease;
+  font-family: var(--font-poppins), sans-serif;
+}
+
+.nav-icon {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.nav-text {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.nav-item:hover {
+  color: var(--text-main);
+}
+
+.nav-item.active {
+  color: var(--accent-blue);
+  background-color: var(--accent-blue-light);
+  border-left-color: var(--accent-blue);
+}
+
+/* =========================================
+   MAIN CONTENT AREA
+========================================= */
+.main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+/* ================= TOP BAR VÀ THẺ PROFILE MỚI - MINIMIZED ================= */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; /* Căn giữa theo chiều dọc */
+  padding: 15px 48px;
+  background-color: transparent;
+  z-index: 5;
+  /* position: sticky;
+  top: 0; */
+}
+
+.system-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+}
+
+/* Icon của hệ thống */
+.brand-icon-box {
+  background: linear-gradient(135deg, rgb(23, 122, 250), rgb(108, 35, 192));
+  width: 46px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(108, 35, 192, 0.2);
+}
+
+.brand-icon-box .icon {
+  color: white;
+  font-size: 24px;
+}
+
+/* Khối chữ */
+.brand-text-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* Điểm nhấn màu xanh cho chữ Grade */
+.brand-name span {
+  color: var(--accent-blue);
+}
+
+.brand-slogan {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* Responsive: Ẩn tên hệ thống hoặc thu nhỏ trên màn hình điện thoại nếu cần */
+@media (max-width: 768px) {
+  .brand-slogan {
+    display: none;
+  }
+}
+
+.profile-container {
+  position: relative;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row; /* Chuyển sang bố cục hàng ngang */
+  align-items: center; /* Căn giữa theo chiều dọc */
+  width: max-content; /* Tự động co giãn theo nội dung */
+  gap: 12px; /* Tạo khoảng cách giữa icon và text */
+  background: transparent; /* Bỏ nền tím */
+  padding: 0; /* Bỏ padding cũ */
+  box-shadow: none; /* Bỏ bóng đổ lớn */
+}
+
+/* Tinh chỉnh phần Text thông tin */
+.profile-info {
+  display: flex;
+  flex-direction: column; /* Stack text lines */
+  text-align: left; /* Căn lề trái */
+  margin: 0;
+}
+
+.profile-info h2,
+.profile-info p {
+  color: var(--text-main); /* Chuyển màu chữ thành màu tối */
+  margin: 0;
+  text-align: left; /* Căn lề trái */
+}
+
+.profile-info h2 {
+  font-size: 14px; /* Giảm font name cho gọn */
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.profile-info p {
+  font-size: 12px;
+  color: var(--text-muted); /* Dùng màu xám nhạt */
+  opacity: 1; /* Bỏ opacity thấp để chữ rõ hơn trên nền sáng */
+}
+
+/* Phần Card chứa avatar và checkmark */
+.profile-card {
+  position: relative;
+  transition: all 0.25s ease-in-out;
+}
+
+.profile-card input {
+  display: none;
+}
+
+.profile-card main {
+  position: relative;
+}
+
+/* Icon Avatar SVG - Làm bé lại */
+.profile-card main a svg {
+  width: 48px; /* Giảm kích thước icon (48x48) */
+  height: 48px;
+  border-radius: 50%;
+  border: 3px solid rgb(108, 35, 192); /* Giữ màu viền nhưng giảm độ dày */
+  color: #bac5e1;
+  background-color: rgb(255, 255, 255);
+}
+
+.profile-avatar-icon {
+  color: #bac5e1;
+}
+
+.profile-card main a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px; /* Giảm padding xung quanh avatar */
+  background-image: linear-gradient(
+    to right,
+    rgb(23, 122, 250) 20%,
+    rgb(3, 240, 209)
+  );
+  border-radius: 50%;
+  overflow: hidden;
+  text-decoration: none;
+}
+
+/* Bỏ các hiệu ứng hover không cần thiết của container */
+.profile-container:hover {
+  box-shadow: none;
+}
+.profile-container:hover .profile-card {
+  transform: none;
+}
+
+/* Tinh chỉnh phần text "Change" khi hover vào icon */
+.profile-card main a:hover::after {
+  opacity: 1;
+}
+
+.profile-card main a::after {
+  content: "Change";
+  position: absolute;
+  width: 100%;
+  height: 35%;
+  left: 0px;
+  bottom: 0px;
+  background-image: linear-gradient(
+    transparent 0%,
+    rgba(108, 35, 192, 0.584) 100%
+  );
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: rgb(255, 255, 255);
+  opacity: 0;
+  transition: all 0.2s ease-in-out 0s;
+  padding-bottom: 2px;
+  font-size: 10px; /* Font size bé cho icon bé */
+  font-weight: 600;
+}
+
+/* Badge Checkmark - Làm bé lại */
+.profile-card .badge-check {
+  position: absolute;
+  bottom: -2px; /* Căn chỉnh vị trí sát vào icon bé */
+  right: -2px;
+  background: rgb(119, 255, 170);
+  width: 20px; /* Làm badge bé lại (20x20) */
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid var(--bg-body); /* Viền màu nền chính cho nổi bật */
+  color: rgb(108, 35, 192); /* Giữ màu checkmark tím */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Thêm chút bóng cho sắc nét */
+}
+
+/* Làm bé icon checkmark bên trong */
+.profile-card .badge-check svg {
+  width: 10px;
+  height: 10px;
+}
+/* PAGE CONTENT WRAPPER */
+/* PAGE CONTENT WRAPPER - ÉP CĂN GIỮA TOÀN BỘ */
+.page-content {
+  padding: 20px 48px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Đẩy toàn bộ nội dung vào giữa */
+}
+
+/* HEADER CỦA TRANG (Chứa Tiêu đề và Bộ lọc) */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 40px;
+  width: 100%;
+  max-width: 1150px; /* Khống chế độ rộng để thẳng hàng với cục Cards bên dưới */
+}
+
+.page-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Nhóm tiêu đề và nút bấm nằm ngang */
+.title-group {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Khoảng cách giữa chữ 12 Courses và nút Add */
+}
+
+/* Nút Add New Course nổi bật */
+.add-course-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--accent-blue);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px; /* Bo góc đồng bộ với filter */
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: var(--font-inter), sans-serif;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 168, 255, 0.2); /* Đổ bóng nhẹ màu xanh */
+  margin-left: 10px;
+}
+
+.add-course-btn .icon {
+  font-size: 20px;
+}
+
+.add-course-btn:hover {
+  background-color: #008be0; /* Đổi màu xanh đậm hơn một chút khi di chuột */
+  transform: translateY(-2px); /* Hiệu ứng nảy lên nhẹ */
+  box-shadow: 0 6px 16px rgba(0, 168, 255, 0.3);
+}
+
+.filters-container {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.filter-dropdown {
+  background: white;
+  border: 1px solid var(--border-color);
+  padding: 8px 15px;
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.filter-dropdown .icon {
+  font-size: 23px;
+}
+
+.view-toggles {
+  display: flex;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.view-btn {
+  background: transparent;
+  border: none;
+  padding: 6px 10px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.view-btn.active {
+  background-color: #f0f3f6;
+  color: var(--text-main);
+}
+
+.view-btn .icon {
+  font-size: 22px;
+}
+
+/* =========================================
+   CARDS GRID - ÉP 3 CỘT VÀ CĂN GIỮA
+========================================= */
+.cards-grid {
+  display: grid;
+
+  grid-template-columns: repeat(3, minmax(300px, 360px));
+  justify-content: center; /* Gom lọt thỏm dàn thẻ vào chính giữa */
+  gap: 32px;
+  width: 100%;
+  max-width: 1150px; /* Giới hạn độ rộng tối đa để không bị bè ra hai bên */
+}
+
+.card {
+  background-color: var(--bg-card);
+  border: none; /* Bỏ viền cứng để tạo cảm giác nổi */
+  border-radius: 16px; /* Bo góc to hơn giống thẻ trong ảnh */
+  padding: 32px 28px; /* Tăng padding cho thoáng */
+  display: flex;
+  flex-direction: column;
+  /* Đổ bóng mềm, rộng giống như ảnh cung cấp */
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.04);
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.card:hover {
+  /* Hiệu ứng nổi bật lên khi hover */
+  /* cursor: pointer; */
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+}
+
+.badge-code {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--accent-blue-light);
+  background-color: var(--status-green);
+  letter-spacing: 0.5px;
+  margin-bottom: 20px;
+}
+
+.card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1b1f24;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.card-credits {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 16px;
+}
+
+.card-desc {
+  font-size: 14px;
+  color: #5f6c7b;
+  line-height: 1.6;
+  margin-bottom: 25px;
+  flex-grow: 1;
+}
+
+.card-meta {
+  margin-bottom: 24px;
+}
+
+.meta-label {
+  display: block;
+  font-size: 10px;
+  color: #a0a5b1;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.meta-value {
+  font-size: 14px;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.card-actions-row {
+  display: flex;
+  gap: 12px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-color); /* Chuyển thành viền nét liền nhẹ nhàng hơn nét đứt */
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  padding: 8px 12px;
+  border-radius: 8px; /* Bo góc nút bấm */
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: var(--font-inter), sans-serif;
+  transition: all 0.2s ease;
+  flex: 1;
+}
+
+.action-btn .icon {
+  font-size: 18px;
+}
+
+.dashboard-state {
+  width: 100%;
+  max-width: 1150px;
+  margin-bottom: 18px;
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+.dashboard-state.error {
+  color: #dc2626;
+}
+
+.action-btn:hover {
+  background: var(--accent-blue-light);
+  color: var(--accent-blue);
+  border-color: var(--accent-blue-light);
+}
+
+.action-btn.icon-only {
+  flex: none;
+  padding: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+@media (max-width: 768px) {
+  .app-container {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+    height: auto;
+    flex-direction: row;
+    padding: 0;
+    justify-content: space-around;
+  }
+  .sidebar-logo {
+    display: none;
+  }
+  .sidebar-nav {
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  .nav-item {
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 10px;
+  }
+  .nav-item.active {
+    border-left-color: transparent;
+    border-bottom-color: var(--accent-blue);
+  }
+  .top-bar {
+    padding: 0 20px;
+  }
+}
+
+/* ================= ANIMATION: FLY IN UP + FADE IN ================= */
+
+/* 1. Định nghĩa Keyframes (Bộ khung chuyển động) */
+@keyframes fadeInUp {
+  from {
+    opacity: 0; /* Bắt đầu mờ hoàn toàn */
+    transform: translateY(30px); /* Bắt đầu ở vị trí thấp hơn 30px */
+  }
+  to {
+    opacity: 1; /* Kết thúc hiện rõ */
+    transform: translateY(0); /* Kết thúc ở vị trí tự nhiên */
+  }
+}
+
+/* 2. Áp dụng animation vào thẻ .card */
+.cards-grid .card {
+  /* ... giữ nguyên các styles cũ của .card ... */
+
+  /* Thêm dòng này để áp dụng animation */
+  animation-name: fadeInUp;
+  animation-duration: 0.6s; /* Thời gian bay vào là 0.6 giây */
+  animation-timing-function: ease-out; /* Chuyển động chậm dần ở cuối */
+  animation-fill-mode: both; /* Giữ trạng thái cuối cùng sau khi kết thúc */
+}
+
+/* 3. Tạo hiệu ứng Staggered (Hiện lần lượt đuổi nhau) */
+/* Thẻ thứ 1 hiện ngay lập tức */
+.cards-grid .card:nth-child(1) {
+  animation-delay: 0.1s;
+}
+/* Thẻ thứ 2 hiện sau 0.1s */
+.cards-grid .card:nth-child(2) {
+  animation-delay: 0.2s;
+}
+/* Thẻ thứ 3 hiện sau 0.2s */
+.cards-grid .card:nth-child(3) {
+  animation-delay: 0.3s;
+}
+/* Thẻ thứ 4... (Cứ thế tăng dần nếu bạn muốn) */
+.cards-grid .card:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.cards-grid .card:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.cards-grid .card:nth-child(6) {
+  animation-delay: 0.6s;
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center; /* Đưa toàn bộ nội dung ra chính giữa hàng */
+  align-items: center;
+  margin-top: 40px; /* Tăng khoảng cách với nội dung phía trên một chút */
+  padding-top: 24px;
+  border-top: 1px solid var(--border-color);
+}
+
+.pagination-info {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.pagination-info b {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Style chung cho nút số và nút điều hướng */
+.pagination-number,
+.pagination-btn {
+  min-width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border-color);
+  background-color: white;
+  border-radius: 4px; /* Bo góc nhẹ 4px theo style EduGrade */
+  font-family: "Inter", sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0 6px;
+}
+
+/* Hiệu ứng Hover */
+.pagination-number:hover,
+.pagination-btn:hover:not(.disabled) {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+  background-color: var(--accent-blue-light);
+}
+
+/* Trạng thái trang hiện tại (Active) */
+.pagination-number.active {
+  background-color: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: white;
+  font-weight: 600;
+}
+
+/* Trạng thái nút bị vô hiệu hóa */
+.pagination-btn.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: #f8f9fa;
+}
+
+/* Dấu ba chấm */
+.pagination-ellipsis {
+  color: var(--text-sidebar);
+  font-size: 14px;
+  padding: 0 4px;
+}
+
+.pagination-btn .material-symbols-rounded {
+  font-size: 20px;
+}
+
+/* =========================================
+   BUTTON STYLES (Dùng chung cho Search & Drawer)
+========================================= */
+.btn-primary {
+  background-color: var(--accent-blue);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px; /* Bo góc 8px cho đồng bộ */
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-primary:hover {
+  background-color: #008be0;
+  transform: translateY(-1px);
+}
+
+.btn-white {
+  background-color: white;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  padding: 8px 15px;
+  border-radius: 8px; /* Bo góc 8px cho đồng bộ với giao diện Course */
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.btn-white:hover {
+  background-color: #f4f6f8;
+  color: var(--text-main);
+}
+.btn-white .material-symbols-rounded {
+  font-size: 20px;
+}
+
+/* =========================================
+   DRAWER COMPONENT (TÌM KIẾM KHÓA HỌC)
+========================================= */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4);
+  z-index: 998;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(2px);
+}
+
+.drawer-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.search-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 100vh;
+  background-color: var(--bg-card);
+  z-index: 999;
+  box-shadow: -5px 0 25px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.search-drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.drawer-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.btn-close-drawer {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.btn-close-drawer:hover {
+  background-color: #f0f3f6;
+  color: var(--text-main);
+}
+
+.drawer-body {
+  padding: 24px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-group input[type="text"],
+.form-group input[type="number"],
+.custom-select {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--text-main);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.custom-select:focus {
+  border-color: var(--accent-blue);
+}
+
+.drawer-footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  background-color: #fcfcfd;
+}
+
+/* Tạo vùng đệm trong suốt nối giữa thẻ profile và menu để không bị mất hover khi di chuột xuống */
+.profile-container::after {
+  content: "";
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  width: 100%;
+  height: 15px;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: calc(100% + 15px);
+  right: 0;
+  background-color: var(--bg-card); /* Nền trắng chuẩn */
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08); /* Đổ bóng đồng bộ với các card khóa học */
+  min-width: 220px;
+  padding: 8px 0;
+  z-index: 1000;
+  /* Hiệu ứng trượt lên & mờ dần (mặc định ẩn) */
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.25s ease-out;
+}
+
+/* Kích hoạt hiển thị khi hover vào vùng profile */
+.profile-container:hover .profile-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  color: var(--text-main); /* Chữ đen/tối tương phản cao trên nền trắng */
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item .material-symbols-rounded {
+  font-size: 20px;
+  color: var(--text-muted); /* Icon màu xám nhạt ban đầu */
+  transition: color 0.2s ease;
+}
+
+/* Hiệu ứng khi hover vào từng mục */
+.dropdown-item:hover {
+  background-color: var(--accent-blue-light); /* Nền xanh siêu nhạt */
+  color: var(--accent-blue); /* Chữ đổi sang xanh đậm */
+}
+
+.dropdown-item:hover .material-symbols-rounded {
+  color: var(--accent-blue);
+}
+
+/* Đường kẻ ngang chia cách */
+.dropdown-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 8px 0;
+}
+
+/* Nút Log Out (Màu đỏ để báo hiệu hành động thoát) */
+.dropdown-item.logout-item:hover {
+  background-color: #fef2f2;
+  color: #dc2626;
+}
+
+.dropdown-item.logout-item:hover .material-symbols-rounded {
+  color: #dc2626;
+}
+
+/* Màu xanh lá cho nút Change Password khi hover */
+.dropdown-item.password-item:hover {
+  background-color: #f0fdf4; /* Xanh lá cực nhạt (Emerald 50) */
+  color: #15803d; /* Xanh lá đậm (Emerald 700) để nổi bật chữ */
+}
+
+/* Đổi màu icon đồng bộ với chữ khi hover */
+.dropdown-item.password-item:hover .material-symbols-rounded {
+  color: #15803d;
+}

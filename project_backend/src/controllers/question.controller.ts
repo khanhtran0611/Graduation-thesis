@@ -1,80 +1,18 @@
 import { Request, Response } from "express";
-import jwtToken from "../auth/auth.services";
 import QuestionDB from "../models/question.model";
-import type {
-  Question as QuestionType,
-  QuestionCard,
-  linkedQuestionPreview,
-} from "../types/questions";
-import { toQuestion, toQuestionCard, tolinkedQuestionPreview } from "../types/questions";
+import type { Question as QuestionType, QuestionCard, OmittedQuestion2 } from "../types/questions";
+import { toQuestion, toQuestionCard } from "../types/questions";
 import { minioConfig } from "../config/minio";
 import { deleteFile, uploadFile } from "../utils/minioUtils";
+import { createLog } from "../utils/logUtils";
 import { v4 as uuidv4 } from "uuid";
+import { questionService } from "./question.service";
+import { ok } from "../utils/responseUtils";
+import { GeneralInfo, GroupInfo } from "../types/exam";
 // Import multer types để TypeScript nhận diện req.file
 import "multer";
 
 class QuestionController {
-  async deleteQuestionsByIds(questionIds: any[]) {
-    const validQuestionIds = Array.isArray(questionIds)
-      ? questionIds.filter((id: any) => !!id)
-      : [];
-    console.log("Valid question IDs for deletion:", validQuestionIds);
-
-    if (validQuestionIds.length === 0) {
-      return {
-        requested: 0,
-        deleted: 0,
-        deletedImages: 0,
-      };
-    }
-
-    const questions = await QuestionDB.find(
-      { _id: { $in: validQuestionIds } },
-      { image: 1 }
-    ).lean();
-
-    const baseUrl = `${minioConfig.useSSL ? "https" : "http"}://${
-      minioConfig.publicEndpoint
-    }:${minioConfig.port}/${minioConfig.bucket}/`;
-
-    const imageUrls = [
-      ...new Set(
-        questions
-          .flatMap((question: any) => (Array.isArray(question.image) ? question.image : []))
-          .filter((url: any) => typeof url === "string" && url.trim().length > 0)
-      ),
-    ];
-
-    for (const imageUrl of imageUrls) {
-      if (!imageUrl.startsWith(baseUrl)) {
-        throw new Error(`INVALID_IMAGE_URL:${imageUrl}`);
-      }
-
-      const fileName = imageUrl.replace(baseUrl, "");
-      await deleteFile(fileName);
-    }
-
-    await QuestionDB.updateMany(
-      {},
-      {
-        $pull: {
-          linked: { $in: validQuestionIds },
-          questions_list: { $in: validQuestionIds },
-        },
-      }
-    );
-
-    const deleteResult = await QuestionDB.deleteMany({
-      _id: { $in: validQuestionIds },
-    });
-
-    return {
-      requested: validQuestionIds.length,
-      deleted: deleteResult.deletedCount ?? 0,
-      deletedImages: imageUrls.length,
-    };
-  }
-
   async getQuestionsCards(req: Request, res: Response) {
     try {
       const { node_id } = req.params;
@@ -83,7 +21,6 @@ class QuestionController {
       }
       const docs = await QuestionDB.find({
         node_id,
-        $or: [{ linked: { $exists: false } }, { linked: { $size: 0 } }],
       }).lean();
       const questionCards: QuestionCard[] = docs.map((doc: any) =>
         toQuestionCard(doc as QuestionType)
@@ -113,88 +50,6 @@ class QuestionController {
     }
   }
 
-  // Fetch multiple questions by an array of questionIds and return previews
-  async getLinkedQuestions(req: Request, res: Response) {
-    try {
-      let { questionIds } = req.body;
-      console.log(questionIds);
-
-      // ensure questionIds is an array
-      if (!questionIds || !Array.isArray(questionIds)) {
-        return res.status(400).json({ message: "questionIds must be an array" });
-      }
-
-      // remove any falsy entries just in case
-      questionIds = questionIds.filter((v: any) => !!v);
-
-      // if (questionIds.length === 0) {
-      //   return res.status(200).json({ data: [] });
-      // }
-
-      const docs = await QuestionDB.find({ _id: { $in: questionIds } }).lean();
-      const previews: QuestionType[] = docs.map((doc: any) => toQuestion(doc));
-
-      return res.status(200).json({ data: previews });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ message: "Server error" });
-    }
-  }
-
-  async getQuestionsExceedMaximumSub(req: Request, res: Response) {
-    try {
-      let { maximum_sub, questionIds } = req.body;
-
-      if (typeof maximum_sub !== "number" || Number.isNaN(maximum_sub)) {
-        return res.status(400).json({
-          message: "maximum_sub must be a valid number",
-        });
-      }
-
-      if (!Array.isArray(questionIds)) {
-        return res.status(400).json({
-          message: "questionIds must be an array",
-        });
-      }
-
-      maximum_sub = Number(maximum_sub);
-      questionIds = questionIds.filter((id: any) => !!id);
-
-      if (questionIds.length === 0) {
-        return res.status(200).json({
-          data: {
-            questionIds: [],
-            total: 0,
-          },
-        });
-      }
-
-      const matchedQuestions = await QuestionDB.find(
-        {
-          _id: { $in: questionIds },
-          questions_list: { $type: "array" },
-          $expr: { $gt: [{ $size: "$questions_list" }, maximum_sub] },
-        },
-        { _id: 1 }
-      ).lean();
-
-      const matchedQuestionIds = matchedQuestions.map((question: any) => question._id?.toString());
-
-      return res.status(200).json({
-        data: {
-          questionIds: matchedQuestionIds,
-          total: matchedQuestionIds.length,
-        },
-      });
-    } catch (error) {
-      console.error("Error checking maximum_sub condition:", error);
-      return res.status(500).json({
-        message: "Failed to check maximum_sub condition",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
-  }
-
   async saveImage(req: Request, res: Response) {
     try {
       // Lấy file từ request
@@ -208,7 +63,7 @@ class QuestionController {
 
       // Tạo tên file unique với uuid và timestamp
       const fileExtension = file.originalname.split(".").pop();
-      const fileName = `images/${uuidv4()}_${Date.now()}.${fileExtension}`;
+      const fileName = `${uuidv4()}_${Date.now()}.${fileExtension}`;
 
       // Upload lên MinIO và lấy public URL
       const imageUrl = await uploadFile(file.buffer, fileName, file.mimetype);
@@ -229,8 +84,96 @@ class QuestionController {
     }
   }
 
+  async uploadImageToCompileServer(req: Request, res: Response) {
+    try {
+      const file = req.file;
+
+      if (!file) {
+        return res.status(400).json({ message: "No image file provided" });
+      }
+
+      const uploadResult = await questionService.uploadImageToCompileServer(file);
+      return ok(res, uploadResult);
+    } catch (error) {
+      console.error("Error uploading image to compile server:", error);
+      if (error instanceof Error && error.message.startsWith("UPLOAD_IMAGE_SERVER_FAILED:")) {
+        return res.status(502).json({
+          message: "Failed to upload image to compile server",
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        message: "Failed to upload image to compile server",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  async proxyImage(req: Request, res: Response) {
+    try {
+      const imageLink = `${minioConfig.bucket}/${req.params.fileName}`;
+      const proxiedImage = await questionService.fetchImageByLink(imageLink);
+
+      res.setHeader("Content-Type", proxiedImage.contentType);
+      if (proxiedImage.contentDisposition) {
+        res.setHeader("Content-Disposition", proxiedImage.contentDisposition);
+      }
+
+      return res.status(200).send(proxiedImage.buffer);
+    } catch (error) {
+      console.error("Error proxying image:", error);
+      if (error instanceof Error && error.message.startsWith("IMAGE_FETCH_FAILED:")) {
+        return res.status(502).json({
+          message: "Failed to fetch image from public endpoint",
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        message: "Failed to proxy image",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
+  async compileLatexPdf(req: Request, res: Response) {
+    try {
+      const { images } = req.body as { images: string[] };
+      const texFile = req.file;
+
+      if (!texFile) {
+        return res.status(400).json({ message: "file is required" });
+      }
+
+      const compiledPdf = await questionService.compileLatexToPdf(images, texFile);
+
+      res.setHeader("Content-Type", compiledPdf.contentType);
+      res.setHeader(
+        "Content-Disposition",
+        compiledPdf.contentDisposition || "attachment; filename=compiled.pdf"
+      );
+
+      return res.status(200).send(compiledPdf.buffer);
+    } catch (error) {
+      console.error("Error compiling LaTeX:", error);
+      if (error instanceof Error && error.message.startsWith("LATEX_COMPILE_FAILED:")) {
+        return res.status(502).json({
+          message: "Failed to compile latex from public endpoint",
+          error: error.message,
+        });
+      }
+
+      return res.status(500).json({
+        message: "Failed to compile latex",
+        error: error instanceof Error ? error.message : "Unknown error",
+      });
+    }
+  }
+
   async createQuestion(req: Request, res: Response) {
     try {
+      const tokenUser = (req as any).user;
       const questionData = req.body;
       console.log("Received question data:", questionData);
 
@@ -254,19 +197,14 @@ class QuestionController {
       // Tạo question mới
       const newQuestion = await QuestionDB.create(questionData);
 
-      const createdQuestionId = newQuestion._id?.toString();
-      const questionsList = Array.isArray((newQuestion as any).questions_list)
-        ? (newQuestion as any).questions_list.filter((id: any) => !!id)
-        : [];
-
-      if (createdQuestionId && questionsList.length > 0) {
-        await QuestionDB.updateMany(
-          { _id: { $in: questionsList } },
-          { $addToSet: { linked: createdQuestionId } }
-        );
-      }
-
       const newQuestionObj = toQuestion(newQuestion);
+
+      await createLog(
+        tokenUser?.id || "",
+        tokenUser?.name || tokenUser?.username || "",
+        tokenUser?.role || "",
+        "CREATE_QUESTION"
+      );
 
       return res.status(201).json({
         message: "Question created successfully",
@@ -289,6 +227,7 @@ class QuestionController {
 
   async updateQuestion(req: Request, res: Response) {
     try {
+      const tokenUser = (req as any).user;
       const { id } = req.params;
       const updateData = req.body;
 
@@ -306,6 +245,13 @@ class QuestionController {
       if (!updatedQuestion) {
         return res.status(404).json({ message: "Question not found" });
       }
+
+      await createLog(
+        tokenUser?.id || "",
+        tokenUser?.name || tokenUser?.username || "",
+        tokenUser?.role || "",
+        "UPDATE_QUESTION"
+      );
 
       return res.status(200).json({
         message: "Question updated successfully",
@@ -326,132 +272,30 @@ class QuestionController {
     }
   }
 
-  async addQuestionLink(req: Request, res: Response) {
-    try {
-      const { parent_id } = req.params;
-      const { question_list } = req.body;
-
-      if (!parent_id) {
-        return res.status(400).json({ message: "parent_id is required" });
-      }
-
-      if (!Array.isArray(question_list)) {
-        return res.status(400).json({
-          message: "question_list must be an array",
-        });
-      }
-
-      const validQuestionIds = question_list.filter((id: any) => !!id);
-
-      // if (validQuestionIds.length === 0) {
-      //   return res.status(400).json({
-      //     message: "question_list must contain at least one question id",
-      //   });
-      // }
-
-      for (const questionId of validQuestionIds) {
-        await QuestionDB.findByIdAndUpdate(
-          questionId,
-          { $addToSet: { linked: parent_id } },
-          { new: true }
-        ).lean();
-      }
-
-      return res.status(200).json({
-        message: "Question links updated successfully",
-      });
-    } catch (error) {
-      console.error("Error adding question links:", error);
-      return res.status(500).json({
-        message: "Failed to add question links",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
-  }
-
-  async removeQuestionLink(req: Request, res: Response) {
-    try {
-      const { parent_id } = req.params;
-      const { question_list } = req.body;
-
-      if (!parent_id) {
-        return res.status(400).json({ message: "parent_id is required" });
-      }
-
-      if (!Array.isArray(question_list)) {
-        return res.status(400).json({
-          message: "question_list must be an array",
-        });
-      }
-
-      const validQuestionIds = question_list.filter((id: any) => !!id);
-
-      if (validQuestionIds.length === 0) {
-        return res.status(400).json({
-          message: "question_list must contain at least one question id",
-        });
-      }
-
-      for (const questionId of validQuestionIds) {
-        await QuestionDB.findByIdAndUpdate(
-          questionId,
-          { $pull: { linked: parent_id } },
-          { new: true }
-        ).lean();
-      }
-
-      return res.status(200).json({
-        message: "Question links removed successfully",
-      });
-    } catch (error) {
-      console.error("Error removing question links:", error);
-      return res.status(500).json({
-        message: "Failed to remove question links",
-        error: error instanceof Error ? error.message : "Unknown error",
-      });
-    }
-  }
-
   async deleteImage(req: Request, res: Response) {
     try {
-      let { imageUrls } = req.body;
+      let { fileNames } = req.body;
 
-      console.log("Received image URLs for deletion:", imageUrls);
+      console.log("Received file names for deletion:", fileNames);
 
-      if (!Array.isArray(imageUrls) || imageUrls.length === 0) {
+      if (!Array.isArray(fileNames) || fileNames.length === 0) {
         return res.status(400).json({
-          message: "imageUrls must be a non-empty array",
+          message: "fileNames must be a non-empty array",
         });
       }
-      console.log("Received image URLs for deletion:", imageUrls);
-
-      if (imageUrls.length === 0) {
-        return res.status(200).json({});
-      }
-
-      // Construct the base URL from minioConfig
-      const baseUrl = `${minioConfig.useSSL ? "https" : "http"}://${
-        minioConfig.publicEndpoint
-      }:${minioConfig.port}/${minioConfig.bucket}/`;
 
       const deletedFiles: string[] = [];
-      const failedFiles: { url: string; error: string }[] = [];
+      const failedFiles: { fileName: string; error: string }[] = [];
 
-      for (const imageUrl of imageUrls) {
+      for (const fileName of fileNames) {
         try {
-          // Extract the fileName from the imageUrl
-          if (!imageUrl.startsWith(baseUrl)) {
-            failedFiles.push({ url: imageUrl, error: "Invalid image URL" });
-            continue;
-          }
-          const fileName = imageUrl.replace(baseUrl, "");
           console.log(`Attempting to delete file: ${fileName} from MinIO`);
           await deleteFile(fileName);
           console.log(`Successfully deleted file: ${fileName} from MinIO`);
           deletedFiles.push(fileName);
         } catch (error) {
           failedFiles.push({
-            url: imageUrl,
+            fileName,
             error: error instanceof Error ? error.message : "Unknown error",
           });
         }
@@ -477,6 +321,7 @@ class QuestionController {
 
   async deleteManyQuestion(req: Request, res: Response) {
     try {
+      const tokenUser = (req as any).user;
       let { questionIds } = req.body;
 
       if (!Array.isArray(questionIds)) {
@@ -492,11 +337,32 @@ class QuestionController {
           message: "questionIds must contain at least one id",
         });
       }
-      const result = await this.deleteQuestionsByIds(questionIds);
+
+      let deleted = 0;
+      let deletedImages = 0;
+
+      for (const questionId of questionIds) {
+        const itemResult = await questionService.deleteQuestionAssetsById(questionId);
+        if (itemResult.deleted) {
+          deleted += 1;
+          deletedImages += itemResult.deletedImages;
+        }
+      }
+
+      await createLog(
+        tokenUser?.id || "",
+        tokenUser?.name || tokenUser?.username || "",
+        tokenUser?.role || "",
+        "DELETE_MANY_QUESTION"
+      );
 
       return res.status(200).json({
         message: "Questions deleted successfully",
-        data: result,
+        data: {
+          requested: questionIds.length,
+          deleted,
+          deletedImages,
+        },
       });
     } catch (error) {
       if (error instanceof Error && error.message.startsWith("INVALID_IMAGE_URL:")) {
@@ -516,6 +382,7 @@ class QuestionController {
 
   async deleteOneQuestion(req: Request, res: Response) {
     try {
+      const tokenUser = (req as any).user;
       const { id } = req.params;
 
       if (!id) {
@@ -524,63 +391,24 @@ class QuestionController {
         });
       }
 
-      const question = await QuestionDB.findById(id, {
-        image: 1,
-        questions_list: 1,
-        type: 1,
-      }).lean();
+      const result = await questionService.deleteQuestionAssetsById(id);
 
-      console.log("Question to delete:", question);
-
-      if (!question) {
+      if (!result.deleted) {
         return res.status(404).json({ message: "Question not found" });
       }
 
-      const groupDeleteResult =
-        (question as any).type === "group"
-          ? await this.deleteQuestionsByIds((question as any).questions_list)
-          : { requested: 0, deleted: 0, deletedImages: 0 };
-
-      const baseUrl = `${minioConfig.useSSL ? "https" : "http"}://${
-        minioConfig.publicEndpoint
-      }:${minioConfig.port}/${minioConfig.bucket}/`;
-
-      const imageUrls = Array.isArray((question as any).image)
-        ? (question as any).image.filter(
-            (url: any) => typeof url === "string" && url.trim().length > 0
-          )
-        : [];
-
-      for (const imageUrl of imageUrls) {
-        if (!imageUrl.startsWith(baseUrl)) {
-          return res.status(400).json({
-            message: "Invalid image URL found while deleting question",
-            data: { invalidImageUrl: imageUrl },
-          });
-        }
-
-        const fileName = imageUrl.replace(baseUrl, "");
-        await deleteFile(fileName);
-      }
-
-      await QuestionDB.updateMany(
-        {},
-        {
-          $pull: {
-            linked: id,
-            questions_list: id,
-          },
-        }
+      await createLog(
+        tokenUser?.id || "",
+        tokenUser?.name || tokenUser?.username || "",
+        tokenUser?.role || "",
+        "DELETE_ONE_QUESTION"
       );
-
-      await QuestionDB.deleteOne({ _id: id });
 
       return res.status(200).json({
         message: "Question deleted successfully",
         data: {
           deleted: 1,
-          deletedImages: imageUrls.length,
-          deletedChildren: groupDeleteResult,
+          deletedImages: result.deletedImages,
         },
       });
     } catch (error) {

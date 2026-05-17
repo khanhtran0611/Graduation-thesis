@@ -1,44 +1,51 @@
 import express, { Request, Response } from "express";
 import { questionController } from "../controllers/question.controller";
-import { upload } from "../middlewares/upload.middleware";
+import { upload, uploadTex } from "../middlewares/upload.middleware";
+import { authorization } from "../auth/auth.middleware";
 
 export const router = express.Router();
 
-// Route GET
-router.get("/questions-card/:node_id", questionController.getQuestionsCards);
-router.get("/:id", questionController.getQuestionById);
+router.get(
+  "/questions-card/:node_id",
+  authorization.authenticateToken,
+  questionController.getQuestionsCards
+);
 
-// Route POST - Tạo question mới
-router.post("/", questionController.createQuestion);
+router.get("/api/image/:fileName", authorization.authenticateToken, questionController.proxyImage);
 
-// Route POST - Upload ảnh lên MinIO
-// Frontend gửi file với field name là "image"
-router.post("/upload-image", upload.single("image"), questionController.saveImage);
+router.post(
+  "/compile-latex",
+  authorization.authenticateToken,
+  uploadTex.single("file"),
+  questionController.compileLatexPdf
+);
 
-// Route POST - Xóa ảnh trên MinIO
-router.post("/delete-images", questionController.deleteImage);
+router.get("/:id", authorization.authenticateToken, questionController.getQuestionById);
 
-// Route POST - Lấy danh sách câu hỏi theo mảng id (preview linkedQuestionPreview)
-router.post("/linked", questionController.getLinkedQuestions);
+router.post("/", authorization.authenticateToken, questionController.createQuestion);
 
-// Route POST - Kiểm tra question có số phần tử questions_list lớn hơn maximum_sub
-router.post("/maximum-sub/check", questionController.getQuestionsExceedMaximumSub);
+router.post(
+  "/upload-image",
+  authorization.authenticateToken,
+  upload.single("image"),
+  questionController.saveImage
+);
 
-// Route POST - Thêm parent_id vào linked[] của các question con trong question_list
-router.post("/link/:parent_id", questionController.addQuestionLink);
+router.post(
+  "/upload-image-server",
+  authorization.authenticateToken,
+  upload.single("image"),
+  questionController.uploadImageToCompileServer
+);
 
-// Route POST - Xóa parent_id khỏi linked[] của các question con trong question_list
-router.post("/unlink/:parent_id", questionController.removeQuestionLink);
+router.post("/delete-images", authorization.authenticateToken, questionController.deleteImage);
 
-// Route PUT - Cập nhật question
-router.put("/:id", questionController.updateQuestion);
+router.put("/:id", authorization.authenticateToken, questionController.updateQuestion);
 
-// Route DELETE - Xóa 1 question theo id params
-router.delete("/:id", (req: Request, res: Response) => {
+router.delete("/:id", authorization.authenticateToken, (req: Request, res: Response) => {
   questionController.deleteOneQuestion(req, res);
 });
 
-// Route DELETE - Xóa nhiều question theo mảng questionIds trong body
-router.post("/delete-many", (req: Request, res: Response) => {
+router.post("/delete-many", authorization.authenticateToken, (req: Request, res: Response) => {
   questionController.deleteManyQuestion(req, res);
 });

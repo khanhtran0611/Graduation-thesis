@@ -8,6 +8,8 @@ export interface UserDocument extends Document {
   role: string;
   email: string;
   password: string;
+  required_change: boolean;
+  unit_id: string;
 }
 
 // Document type (mongoose document with methods + fields)
@@ -18,6 +20,8 @@ const userSchema = new Schema<UserDocument>({
   role: String,
   email: String,
   password: String,
+  required_change: Boolean,
+  unit_id: String,
 });
 
 // Hash password before saving user document

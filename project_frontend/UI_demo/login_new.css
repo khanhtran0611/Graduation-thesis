@@ -1,0 +1,191 @@
+.auth-layout {
+  --bg-body: #fafafb;
+  --text-main: #1b1f24;
+  --text-muted: #5c6370;
+  --accent-blue: #00a8ff;
+  --border-color: #e4e9f0;
+  --shadow: 0 10px 40px rgba(0, 0, 0, 0.06);
+  font-family: "Inter", sans-serif;
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CONTAINER */
+.auth-container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  animation: formFadeIn 0.3s ease-out;
+  overflow: hidden;
+}
+
+@keyframes formFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* HEADER & THƯƠNG HIỆU */
+.auth-header {
+  padding: 32px 32px 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.system-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  user-select: none;
+  justify-content: center;
+}
+
+.brand-icon-box {
+  background: linear-gradient(135deg, rgb(23, 122, 250), rgb(108, 35, 192));
+  width: 46px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(108, 35, 192, 0.2);
+}
+
+.brand-text-box {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.brand-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.5px;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.brand-name span {
+  color: var(--accent-blue);
+}
+
+.brand-slogan {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.auth-subtitle {
+  font-size: 14px;
+  color: var(--text-muted);
+}
+
+/* BODY CỦA FORM */
+.auth-body {
+  padding: 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.form-group input,
+.custom-select {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s;
+  background-color: white;
+}
+
+.form-group input:focus,
+.custom-select:focus {
+  border-color: var(--accent-blue);
+  box-shadow: 0 0 0 3px rgba(0, 168, 255, 0.1);
+}
+
+.custom-select {
+  cursor: pointer;
+  appearance: auto; /* Hiển thị mũi tên dropdown mặc định của trình duyệt */
+}
+
+/* FOOTER */
+.auth-footer {
+  padding: 8px 32px 32px;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: var(--accent-blue);
+  color: white;
+  border: none;
+  padding: 14px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.btn-primary:hover {
+  background-color: #0096e6;
+  transform: translateY(-1px);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.signup-prompt {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.signup-prompt a {
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.signup-prompt a:hover {
+  text-decoration: underline;
+}

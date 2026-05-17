@@ -1,15 +1,40 @@
 import { Request, Response } from "express";
-import jwtToken from "../auth/auth.services";
 import { CourseDB } from "../models/courses.model";
-import { Course } from "../types/courses";
-import { toCourseCardDisplay, toCourse } from "../types/courses";
+import { AuthorityDB } from "../models/authority.model";
+import { toCourse, toOmittedCourse } from "../types/courses";
 
 class CourseController {
-  async getCourseCards(req: Request, res: Response) {
+  async getOmittedCourses(req: Request, res: Response) {
     try {
       const docs = await CourseDB.find().lean();
-      const courseCards = docs.map(toCourseCardDisplay);
-      return res.status(200).json({ courses: courseCards });
+      const omittedCourses = docs.map(toOmittedCourse);
+      return res.status(200).json({ courses: omittedCourses });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async getCoursesForAdmin(req: Request, res: Response) {
+    try {
+      const docs = await CourseDB.find().lean();
+      const courses = docs.map(toCourse);
+      return res.status(200).json({ courses });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  async getCourseCards(req: Request, res: Response) {
+    try {
+      const userId = (req as any).user?.id;
+
+      const authorityDoc = await AuthorityDB.findOne({ user_id: userId }).lean();
+      const courseIds = (authorityDoc?.course_list || []).map((course) => course.id);
+      const docs = await CourseDB.find({ _id: { $in: courseIds } }).lean();
+      const courses = docs.map(toCourse);
+      return res.status(200).json({ courses });
     } catch (error) {
       console.error(error);
       return res.status(500).json({ message: "Server error" });
@@ -38,17 +63,6 @@ class CourseController {
     try {
       const { subject_name, subject_code, credits, department, description } = req.body;
 
-      // Validation
-      if (!subject_name || !subject_code || !credits || !department || !description) {
-        return res.status(400).json({ message: "All fields are required" });
-      }
-
-      // Check if course with same subject_code already exists
-      const existingCourse = await CourseDB.findOne({ subject_code });
-      if (existingCourse) {
-        return res.status(409).json({ message: "Course with this subject code already exists" });
-      }
-
       const newCourse = new CourseDB({
         subject_name,
         subject_code,
@@ -74,34 +88,23 @@ class CourseController {
       const courseId = req.params.id;
       const { subject_name, subject_code, credits, department, description } = req.body;
 
-      // Check if course exists
-      const course = await CourseDB.findById(courseId);
-      if (!course) {
-        return res.status(404).json({ message: "Course not found" });
-      }
-
-      // If subject_code is being changed, check if new code already exists
-      if (subject_code && subject_code !== course.subject_code) {
-        const existingCourse = await CourseDB.findOne({ subject_code });
-        if (existingCourse) {
-          return res.status(409).json({ message: "Course with this subject code already exists" });
-        }
-      }
-
-      // Update course
       const updatedCourse = await CourseDB.findByIdAndUpdate(
         courseId,
         {
-          subject_name: subject_name || course.subject_name,
-          subject_code: subject_code || course.subject_code,
-          credits: credits || course.credits,
-          department: department || course.department,
-          description: description || course.description,
+          subject_name,
+          subject_code,
+          credits,
+          department,
+          description,
         },
         { new: true }
       ).lean();
 
-      const courseData = toCourse(updatedCourse!);
+      if (!updatedCourse) {
+        return res.status(404).json({ message: "Course not found" });
+      }
+
+      const courseData = toCourse(updatedCourse);
       return res.status(200).json({
         message: "Course updated successfully",
         course: courseData,

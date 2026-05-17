@@ -1,10 +1,10 @@
 import mongoose, { Schema, Document } from "mongoose";
+import type { SubQuestion } from "../types/questions";
 
 interface Option {
   id: string;
   content: string;
   image: string;
-  answer_label: string;
   is_correct: boolean;
 }
 
@@ -15,8 +15,9 @@ export interface QuestionDocument extends Document {
   content: string;
   image: string[];
   options: Option[];
-  questions_list: string[];
-  linked: string[];
+  option_compiled: string;
+  option_max_size: number;
+  questions_list: SubQuestion[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -24,7 +25,6 @@ export interface QuestionDocument extends Document {
 const OptionSchema = new Schema<Option>({
   content: { type: String, required: false },
   image: { type: String, required: false },
-  answer_label: { type: String, required: false },
   is_correct: { type: Boolean, required: false },
 });
 
@@ -36,8 +36,9 @@ const QuestionSchema = new Schema<QuestionDocument>(
     content: { type: String, required: true },
     image: { type: [String], required: false },
     options: { type: [OptionSchema], required: true },
-    questions_list: { type: [String], required: false },
-    linked: { type: [String], required: false },
+    option_compiled: { type: String, required: false },
+    option_max_size: { type: Number, required: false },
+    questions_list: { type: [Object], required: false },
   },
   {
     timestamps: true,

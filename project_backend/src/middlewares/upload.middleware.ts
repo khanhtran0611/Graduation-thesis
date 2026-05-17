@@ -21,3 +21,17 @@ export const upload = multer({
     }
   },
 });
+
+export const uploadTex = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.originalname.toLowerCase().endsWith(".tex")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only .tex files are allowed."));
+    }
+  },
+});

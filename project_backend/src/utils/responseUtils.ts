@@ -35,6 +35,14 @@ export const unauthorized = (res: Response, message?: string): Response => {
   });
 };
 
+export const forbidden = (res: Response, message?: string): Response => {
+  return res.status(403).send({
+    success: false,
+    status: 403,
+    message: message || "Forbidden",
+  });
+};
+
 export const invalidated = (res: Response, errors: ValidationErrors): Response => {
   return res.status(422).send({
     success: false,
@@ -43,4 +51,4 @@ export const invalidated = (res: Response, errors: ValidationErrors): Response =
   });
 };
 
-export default { ok, notFound, error, unauthorized, invalidated };
+export default { ok, notFound, error, unauthorized, forbidden, invalidated };

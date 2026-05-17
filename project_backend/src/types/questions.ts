@@ -2,9 +2,10 @@ type option = {
   id: string;
   content: string;
   image: string;
-  answer_label: string;
   is_correct: boolean;
 };
+
+export type SubQuestion = Omit<Question, "questions_list">;
 
 export type Question = {
   id: string;
@@ -14,8 +15,9 @@ export type Question = {
   content: string;
   image: string[];
   options: option[];
-  questions_list: string[];
-  linked: string[];
+  option_compiled: string;
+  option_max_size: number;
+  questions_list: SubQuestion[];
   createdAt: Date;
   updatedAt: Date;
 };
@@ -28,17 +30,14 @@ export type QuestionCard = {
   content: string;
   image: string[];
   updatedAt: Date;
-  questions_list: string[];
+  questions_list: SubQuestion[];
 };
-
-export type linkedQuestionPreview = Pick<Question, "id" | "content">;
 
 export const toOption = (doc: any): option => ({
   // Ưu tiên lấy id có sẵn, nếu không thì lấy _id convert sang string
   id: doc._id?.toString() ?? "",
   content: doc.content,
   image: doc.image ?? "",
-  answer_label: doc.answer_label,
   is_correct: doc.is_correct,
 });
 
@@ -57,8 +56,9 @@ export const toQuestion = (doc: any): Question => ({
   content: doc.content,
   image: doc.image,
   options: doc.options?.map((optionDoc: any) => toOption(optionDoc)) ?? [],
+  option_compiled: doc.option_compiled ?? "",
+  option_max_size: doc.option_max_size ?? 0,
   questions_list: doc.questions_list ?? [],
-  linked: doc.linked ?? [],
   createdAt: doc.createdAt,
   updatedAt: doc.updatedAt,
 });
@@ -73,15 +73,28 @@ export const toQuestionCard = (doc: any): QuestionCard => ({
   questions_list: doc.questions_list ?? [],
 });
 
-export const tolinkedQuestionPreview = (doc: any): linkedQuestionPreview => ({
-  id: doc._id?.toString(),
-  content: doc.content,
-});
-
-export type OmittedQuestion = Pick<Question, "id" | "content" | "options" | "type">;
+export type OmittedQuestion = Pick<
+  Question,
+  "id" | "content" | "options" | "type" | "questions_list"
+>;
 export const toOmittedQuestion = (doc: any): OmittedQuestion => ({
   id: doc._id?.toString(),
   content: doc.content,
   options: doc.options?.map((optionDoc: any) => toOption(optionDoc)) ?? [],
+  questions_list: doc.questions_list ?? [],
   type: doc.type,
 });
+
+export type OmittedQuestion2 = {
+  id: string;
+  questions_list: string[];
+};
+
+export type SubQuestion3 = Pick<Question, "content" | "options" | "type" | "option_max_size">;
+
+export type OmittedQuestion3 = Pick<
+  Question,
+  "content" | "options" | "type" | "option_max_size"
+> & {
+  questions_list: SubQuestion3[];
+};
