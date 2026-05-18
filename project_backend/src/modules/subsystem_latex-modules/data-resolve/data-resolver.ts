@@ -1,13 +1,35 @@
 import QuestionDB from "../../../models/question.model";
 import { ExamDetail2 } from "../../../types/exam";
 import { OmittedQuestion2, OmittedQuestion3, SubQuestion3 } from "../../../types/questions";
+import { AbstractDataResolver } from "./data-resolver.abstract";
 import { ResolvedExamData } from "./data-resolver.data";
+import { DataResolverRegistry, DataTypeRegistry } from "./data-resolver.registry";
 
 export class ExamDataResolver {
   /**
    * Hàm chính được gọi từ bên ngoài.
    * Nhận vào exam thô, trả về data sạch.
    */
+
+  private resolverCache = new Map<string, AbstractDataResolver>();
+
+  private recursiveFactory = (type: string): AbstractDataResolver => {
+    const versionKey = DataTypeRegistry[type] || DataTypeRegistry.mcq;
+
+    if (this.resolverCache.has(versionKey)) {
+      return this.resolverCache.get(versionKey)!;
+    }
+
+    const ResolverClass = DataResolverRegistry[versionKey];
+    if (!ResolverClass) {
+      throw new Error(`DataResolver version ${versionKey} not found in registry`);
+    }
+
+    const instance = new ResolverClass();
+    this.resolverCache.set(versionKey, instance);
+    return instance;
+  };
+
   public async resolve(exam: ExamDetail2): Promise<ResolvedExamData> {
     const orderedParentIds = this.extractParentIds(exam.questions_list);
 
@@ -47,59 +69,21 @@ export class ExamDataResolver {
       const qDoc = fetchedQuestionsDocs.find((q) => q._id.toString() === item.id);
       if (!qDoc) return;
 
-      // 1. Trích xuất ảnh của câu cha
-      this.extractImagesFromDoc(qDoc, extractedImages);
+      // Kích hoạt Factory để lấy đúng thợ xử lý data
+      const resolver = this.recursiveFactory(qDoc.type);
 
-      let finalSubQuestions: SubQuestion3[] = [];
+      // Thợ tự lo việc build cấu trúc và đẩy ảnh vào mảng extractedImages
+      const questionData = resolver.resolve(qDoc, item, extractedImages, this.recursiveFactory);
 
-      // 2. Xử lý sub-questions nếu là group
-      if (qDoc.type === "group" && Array.isArray(qDoc.questions_list)) {
-        const subIds = item.questions_list || [];
-        const matchedSubs = qDoc.questions_list.filter((sq: any) =>
-          subIds.includes(sq.id || sq._id?.toString())
-        );
-
-        matchedSubs.forEach((sq: any) => {
-          this.extractImagesFromDoc(sq, extractedImages); // Trích xuất ảnh câu con
-
-          finalSubQuestions.push({
-            content: sq.content,
-            options: sq.options || [],
-            type: sq.type,
-            option_max_size: sq.option_max_size,
-          });
-        });
-      }
-
-      orderedQuestions.push({
-        content: qDoc.content,
-        options: qDoc.options || [],
-        type: qDoc.type,
-        option_max_size: qDoc.option_max_size,
-        questions_list: finalSubQuestions,
-      });
+      orderedQuestions.push(questionData);
     });
 
-    // 3. Lọc trùng ảnh
+    // Lọc trùng ảnh chung ở ngoài cùng
     const finalImagesList = [...new Set(extractedImages.filter(Boolean))];
 
     return {
       orderedQuestions,
       images: finalImagesList,
     };
-  }
-
-  /**
-   * Hàm helper nhỏ chuyên tìm ảnh trong question và options
-   */
-  private extractImagesFromDoc(doc: any, imageArray: string[]) {
-    if (Array.isArray(doc.image)) {
-      imageArray.push(...doc.image);
-    }
-    if (Array.isArray(doc.options) && doc.type === "mcq") {
-      doc.options.forEach((opt: any) => {
-        if (opt.image) imageArray.push(opt.image);
-      });
-    }
   }
 }
