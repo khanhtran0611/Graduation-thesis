@@ -1,5 +1,6 @@
 import { AdminLogDB } from "../../../models/logAdmin.model";
-import { toLogAdmin } from "../../../types/log";
+import { LogDB } from "../../../models/log.model";
+import { toLog, toLogAdmin } from "../../../types/log";
 import { getLogI } from "../interface/log.interface";
 
 const buildFilter = (
@@ -44,7 +45,7 @@ const buildFilter = (
   return filter;
 };
 
-const paginateLogs = async (filter: Record<string, unknown>, page = 1, limit = 10) => {
+const paginateAdminLogs = async (filter: Record<string, unknown>, page = 1, limit = 10) => {
   const paginateModel = AdminLogDB as any;
   const paginated = await paginateModel.paginate(filter, {
     page,
@@ -61,6 +62,43 @@ const paginateLogs = async (filter: Record<string, unknown>, page = 1, limit = 1
   };
 };
 
+const paginateLogs = async (filter: Record<string, unknown>, page = 1, limit = 10) => {
+  const paginateModel = LogDB as any;
+  const paginated = await paginateModel.paginate(filter, {
+    page,
+    limit,
+    sort: { createdAt: -1 },
+    lean: true,
+  });
+
+  return {
+    logs: (paginated.docs || []).map(toLog),
+    currentPage: paginated.page || page,
+    limit,
+    totalPages: paginated.totalPages || 0,
+  };
+};
+
+export const getLogsByCourse = async (
+  course_id: string,
+  user?: string,
+  user_id?: string,
+  role?: string,
+  actions?: string,
+  time?: string,
+  page = 1,
+  limit = 10
+) => {
+  const filter = buildFilter(undefined, user, user_id, actions, time);
+  filter.course_id = course_id;
+
+  if (role) {
+    filter.role = role;
+  }
+
+  return paginateLogs(filter, page, limit);
+};
+
 export class getSuperAdminLog implements getLogI {
   public async getLog(
     unit_id: string,
@@ -74,7 +112,7 @@ export class getSuperAdminLog implements getLogI {
   ) {
     const filter = buildFilter(undefined, user, user_id, actions, time);
     filter.role = "super admin";
-    return paginateLogs(filter, page, limit);
+    return paginateAdminLogs(filter, page, limit);
   }
 }
 
@@ -91,6 +129,6 @@ export class getAdminLog implements getLogI {
   ) {
     const filter = buildFilter(unit_id, user, user_id, actions, time);
     filter.role = "admin";
-    return paginateLogs(filter, page, limit);
+    return paginateAdminLogs(filter, page, limit);
   }
 }

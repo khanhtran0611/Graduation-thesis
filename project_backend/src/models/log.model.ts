@@ -10,6 +10,7 @@ const logSchema = new Schema<LogDocument>(
     username: { type: String, required: true },
     role: { type: String, required: true },
     action: { type: String, required: true },
+    course_id: { type: String, required: false },
   },
   {
     timestamps: { createdAt: true, updatedAt: false },

@@ -4,6 +4,7 @@ import generalManageService, {
   GeneralManageService,
   ServiceError,
 } from "../service/general_manage.service";
+import logService from "../../log-services/service/log.service";
 
 type GenerateExamCodesRequestBody = {
   id: string;
@@ -48,6 +49,16 @@ class GeneralManageController {
     try {
       const { id, desired_codes } = req.body as GenerateExamCodesRequestBody;
       const data = await this.service.generateExamCodes(id, desired_codes);
+
+      const user = (req as any).user;
+      await logService.addCourseLog(
+        user.id,
+        user.name,
+        user.role,
+        `Generate ${desired_codes} exam codes for exam : ${id}`,
+        data.course_id
+      );
+
       return ok(res, data);
     } catch (error) {
       return this.handleError(res, error);
@@ -77,6 +88,16 @@ class GeneralManageController {
   public async deleteExamById(req: Request, res: Response): Promise<Response> {
     try {
       const data = await this.service.deleteExamById(req.params.id);
+
+      const user = (req as any).user;
+      await logService.addCourseLog(
+        user.id,
+        user.name,
+        user.role,
+        `Deleted exam with id : ${req.params.id}`,
+        data.course_id
+      );
+
       return ok(res, data);
     } catch (error) {
       return this.handleError(res, error);

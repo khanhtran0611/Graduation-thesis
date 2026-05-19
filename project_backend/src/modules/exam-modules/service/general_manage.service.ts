@@ -91,6 +91,7 @@ export class GeneralManageService {
 
     return {
       exam_id: id,
+      course_id: parentExam.course_id,
       desired_codes: desiredCodes,
       created_count: createdExams.length,
       data: createdExams,
@@ -142,6 +143,7 @@ export class GeneralManageService {
 
     return {
       id,
+      course_id: (deletedExam as any).course_id?.toString() as string | undefined,
       deleted: true,
     };
   }

@@ -7,14 +7,17 @@ export class UpdateQuestionServiceV1 implements IUpdateQuestionService {
     return "V1";
   }
   async updateQuestion(id: string, data: any) {
-    const updatedQuestion = await QuestionDB.findByIdAndUpdate(
-      id,
-      { $set: data },
-      { new: true, runValidators: true }
-    ).lean(); //
+    const question = await QuestionDB.findById(id);
 
-    if (!updatedQuestion) throw new Error("Question not found");
+    if (!question) throw new Error("Question not found");
 
-    return toQuestion(updatedQuestion); //
+    Object.assign(question, data);
+    const changedFields = question.modifiedPaths();
+    const savedQuestion = await question.save();
+
+    return {
+      data: toQuestion(savedQuestion),
+      changedFields,
+    };
   }
 }

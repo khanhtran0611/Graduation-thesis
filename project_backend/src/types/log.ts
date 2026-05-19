@@ -4,6 +4,7 @@ export type Log = {
   username: string;
   role: string;
   action: string;
+  course_id?: string;
   createdAt: Date;
 };
 
@@ -23,6 +24,7 @@ export const toLog = (doc: any): Log => ({
   username: doc.username,
   role: doc.role,
   action: doc.action,
+  course_id: doc.course_id ?? "",
   createdAt: doc.createdAt,
 });
 

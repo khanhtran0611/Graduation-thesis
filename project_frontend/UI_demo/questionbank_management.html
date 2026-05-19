@@ -239,21 +239,53 @@
                         <div class="toolbar-left"></div>
 
                         <div class="toolbar-right">
-                          <button class="btn-white" id="btnOpenSearch">
-                            <span class="material-symbols-rounded"
-                              >filter_alt</span
-                            >
-                            Search Questions
-                          </button>
+                          <div class="default-actions" id="defaultActions">
+                            <button class="btn-white" id="btnOpenSearch">
+                              <span class="material-symbols-rounded"
+                                >filter_alt</span
+                              >
+                              Search Questions
+                            </button>
 
-                          <button
-                            type="button"
-                            class="action-btn add-item"
-                            aria-label="Add item"
+                            <button
+                              type="button"
+                              class="action-btn add-item"
+                              aria-label="Add item"
+                            >
+                              <span class="material-symbols-rounded">add</span>
+                              New Question
+                            </button>
+                          </div>
+
+                          <div
+                            class="bulk-actions"
+                            id="bulkActions"
+                            style="display: none"
                           >
-                            <span class="material-symbols-rounded">add</span>
-                            New Question
-                          </button>
+                            <span
+                              class="selection-count"
+                              id="selectionCount"
+                            ></span>
+                            <button
+                              type="button"
+                              class="btn-white"
+                              id="btnCancelSelection"
+                            >
+                              Cancel
+                            </button>
+                            <button type="button" class="btn-white">
+                              <span class="material-symbols-rounded"
+                                >archive</span
+                              >
+                              Save to Archive
+                            </button>
+                            <button type="button" class="btn-danger">
+                              <span class="material-symbols-rounded"
+                                >delete_forever</span
+                              >
+                              Delete Permanently
+                            </button>
+                          </div>
                         </div>
                       </div>
 
@@ -261,16 +293,26 @@
                         <table class="question-table">
                           <thead>
                             <tr>
+                              <th width="4%" style="text-align: center">
+                                <input type="checkbox" id="selectAllCheckbox" />
+                              </th>
                               <th width="10%">ID</th>
                               <th width="10%">Image</th>
                               <th width="40%">Question Text</th>
-                              <th width="15%">Difficulty</th>
-                              <th width="15%">Last Updated</th>
+                              <th width="12%">Difficulty</th>
+                              <th width="14%">Last Updated</th>
                               <th width="10%">Actions</th>
                             </tr>
                           </thead>
-                          <tbody>
+                          <tbody id="questionTableBody">
                             <tr>
+                              <td align="center">
+                                <input
+                                  type="checkbox"
+                                  class="row-checkbox"
+                                  value="69c1127b33286c4291164702"
+                                />
+                              </td>
                               <td>
                                 <span
                                   class="badge-code"
@@ -312,6 +354,13 @@
                             </tr>
 
                             <tr>
+                              <td align="center">
+                                <input
+                                  type="checkbox"
+                                  class="row-checkbox"
+                                  value="Q-1025"
+                                />
+                              </td>
                               <td>
                                 <span class="badge-code" title="Q-1025"
                                   >Q-1025</span
@@ -452,6 +501,7 @@
         </div>
       </main>
     </div>
+
     <div class="drawer-overlay" id="searchOverlay"></div>
     <div class="search-drawer" id="searchDrawer">
       <div class="drawer-header">
@@ -495,6 +545,7 @@
     </div>
 
     <script>
+      /* --- XỬ LÝ DRAWER TÌM KIẾM --- */
       const btnOpen = document.getElementById("btnOpenSearch");
       const btnClose = document.getElementById("btnCloseSearch");
       const overlay = document.getElementById("searchOverlay");
@@ -513,6 +564,76 @@
       btnOpen.addEventListener("click", openDrawer);
       btnClose.addEventListener("click", closeDrawer);
       overlay.addEventListener("click", closeDrawer);
+
+      /* --- XỬ LÝ CHECKBOX VÀ ẨN HIỆN NÚT --- */
+      const selectAllCheckbox = document.getElementById("selectAllCheckbox");
+      const rowCheckboxes = document.querySelectorAll(".row-checkbox");
+      const defaultActions = document.getElementById("defaultActions");
+      const bulkActions = document.getElementById("bulkActions");
+      const btnCancelSelection = document.getElementById("btnCancelSelection");
+      const selectionCount = document.getElementById("selectionCount");
+
+      // Hàm cập nhật trạng thái UI
+      function updateBulkActions() {
+        const checkedCount = document.querySelectorAll(
+          ".row-checkbox:checked"
+        ).length;
+
+        if (checkedCount > 0) {
+          // Ẩn nút mặc định, hiện nút thao tác hàng loạt
+          defaultActions.style.display = "none";
+          bulkActions.style.display = "flex";
+          selectionCount.textContent = `${checkedCount} selected`;
+
+          // Làm nổi bật hàng đang được chọn bằng class row-selected
+          rowCheckboxes.forEach((cb) => {
+            if (cb.checked) {
+              cb.closest("tr").classList.add("row-selected");
+            } else {
+              cb.closest("tr").classList.remove("row-selected");
+            }
+          });
+        } else {
+          // Trả về mặc định
+          defaultActions.style.display = "flex";
+          bulkActions.style.display = "none";
+          rowCheckboxes.forEach((cb) =>
+            cb.closest("tr").classList.remove("row-selected")
+          );
+          selectAllCheckbox.checked = false; // Reset luôn select all
+        }
+      }
+
+      // Lắng nghe sự kiện click trên từng checkbox
+      rowCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", () => {
+          // Kiểm tra xem có phải tất cả đều được check không để đồng bộ với nút Select All
+          const allChecked =
+            document.querySelectorAll(".row-checkbox:checked").length ===
+            rowCheckboxes.length;
+          selectAllCheckbox.checked = allChecked;
+
+          updateBulkActions();
+        });
+      });
+
+      // Lắng nghe sự kiện click nút Select All
+      selectAllCheckbox.addEventListener("change", (e) => {
+        const isChecked = e.target.checked;
+        rowCheckboxes.forEach((checkbox) => {
+          checkbox.checked = isChecked;
+        });
+        updateBulkActions();
+      });
+
+      // Nút Cancel hủy bỏ chọn
+      btnCancelSelection.addEventListener("click", () => {
+        rowCheckboxes.forEach((checkbox) => {
+          checkbox.checked = false;
+        });
+        selectAllCheckbox.checked = false;
+        updateBulkActions();
+      });
     </script>
   </body>
 </html>

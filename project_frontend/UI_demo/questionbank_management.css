@@ -1134,3 +1134,67 @@ body {
   gap: 12px;
   background-color: #fcfcfd;
 }
+
+/* =========================================
+   CHECKBOX & BULK ACTIONS (Xử lý hàng loạt)
+========================================= */
+
+/* Checkbox Style */
+.question-table input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--accent-blue);
+  cursor: pointer;
+}
+
+/* Các nhóm nút hành động */
+.default-actions,
+.bulk-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.selection-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-blue);
+  margin-right: 8px;
+  background-color: var(--badge-code-bg);
+  padding: 4px 12px;
+  border-radius: 20px;
+}
+
+/* Nút Xóa đỏ nổi bật */
+.btn-danger {
+  background-color: #ef4444;
+  color: white;
+  border: 1px solid #ef4444;
+  padding: 8px 15px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-danger:hover {
+  background-color: #dc2626;
+  border-color: #dc2626;
+  transform: translateY(-1px);
+}
+
+.btn-danger .material-symbols-rounded {
+  font-size: 20px;
+}
+
+/* Hiệu ứng Hightlight cho dòng Table được chọn */
+.question-table tbody tr.row-selected {
+  background-color: #f0f8ff !important; /* Xanh lơ nhạt */
+}
+.question-table tbody tr.row-selected td {
+  border-bottom-color: #bae6fd;
+}

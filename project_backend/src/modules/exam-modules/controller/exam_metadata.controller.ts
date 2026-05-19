@@ -12,6 +12,7 @@ import {
   SaveRootExamServiceRegistry,
 } from "../registry/exam_metadata_registry";
 import { ServiceError } from "../service/general_manage.service";
+import logService from "../../log-services/service/log.service";
 
 class ExamMetadataController {
   private saveRootExamService: ISaveRootExamService;
@@ -43,6 +44,18 @@ class ExamMetadataController {
       const result = await this.saveRootExamService.saveRootExam(
         req.body as SaveRootExamRequestBody
       );
+
+      const user = (req as any).user;
+      const examId = (result.data as any)?._id?.toString();
+      const courseId = (req.body as SaveRootExamRequestBody).course_id;
+      await logService.addCourseLog(
+        user.id,
+        user.name,
+        user.role,
+        `Create new root exam with id : ${examId}`,
+        courseId
+      );
+
       return res.status(201).json(result);
     } catch (error) {
       return this.handleError(res, error);

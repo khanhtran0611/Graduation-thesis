@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Course Dashboard - Audit Logs</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="./course_log.css" />
+  </head>
+  <body>
+    <div class="app-container">
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <span class="material-symbols-rounded">menu</span>
+        </div>
+        <nav class="sidebar-nav">
+          <a href="#" class="nav-item">
+            <span class="material-symbols-rounded nav-icon">dashboard</span>
+            <span class="nav-text">DASHBOARD</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="material-symbols-rounded nav-icon">menu_book</span>
+            <span class="nav-text">COURSES</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="material-symbols-rounded nav-icon">quiz</span>
+            <span class="nav-text">QUESTION BANK</span>
+          </a>
+          <a href="#" class="nav-item active">
+            <span class="material-symbols-rounded nav-icon">history</span>
+            <span class="nav-text">AUDIT LOGS</span>
+          </a>
+          <a href="#" class="nav-item">
+            <span class="material-symbols-rounded nav-icon">settings</span>
+            <span class="nav-text">SETTINGS</span>
+          </a>
+        </nav>
+      </aside>
+
+      <main class="main-content">
+        <header class="top-bar">
+          <div class="system-brand">
+            <div class="brand-icon-box">
+              <span class="material-symbols-rounded">edit_document</span>
+            </div>
+            <div class="brand-text-box">
+              <h2 class="brand-name">Edu<span>Grade</span></h2>
+              <span class="brand-slogan">Hệ thống Quản lý & Chấm thi</span>
+            </div>
+          </div>
+
+          <div class="profile-container">
+            <div class="profile-info">
+              <h2>Igor Brown</h2>
+              <p>Developer</p>
+            </div>
+            <div class="profile-card">
+              <input accept="image/png, image/jpeg" name="avatar" type="file" />
+              <main>
+                <a href="#">
+                  <svg
+                    xml:space="preserve"
+                    style="enable-background: new 0 0 129.5 129.5"
+                    viewBox="0 0 129.5 129.5"
+                    y="0px"
+                    x="0px"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"
+                    xmlns="http://www.w3.org/2000/svg"
+                    version="1.1"
+                  >
+                    <style type="text/css">
+                      .st0 {
+                        fill: #bac5e1;
+                      }
+                      .st1 {
+                        fill: #ffffff;
+                      }
+                    </style>
+                    <g>
+                      <ellipse
+                        ry="64.8"
+                        rx="64.8"
+                        cy="64.8"
+                        cx="64.8"
+                        class="st0"
+                        transform="matrix(0.7071 -0.7071 0.7071 0.7071 -26.8258 64.7633)"
+                      />
+                      <ellipse
+                        ry="32.6"
+                        rx="25.2"
+                        cy="54.2"
+                        cx="64.8"
+                        class="st1"
+                      />
+                      <path
+                        d="M64.8,89.1c-21.1,0-39.6,6.4-50.5,16.2c11.9,14.7,30.1,24.2,50.5,24.2c20.4,0,38.6-9.4,50.5-24.2 C104.4,95.6,85.8,89.1,64.8,89.1z"
+                        class="st1"
+                      />
+                      <path
+                        d="M67.6,105.9H62c-5.3,0-9.6-4.3-9.6-9.6V74.4c0-5.3,4.3-9.6,9.6-9.6h5.6c5.3,0,9.6,4.3,9.6,9.6v21.9 C77.2,101.6,72.9,105.9,67.6,105.9z"
+                        class="st1"
+                      />
+                    </g>
+                  </svg>
+                </a>
+              </main>
+              <span class="badge-check">
+                <svg
+                  stroke="currentColor"
+                  fill="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  height="8"
+                  width="8"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M173.898 439.404l-166.4-166.4c-9.997-9.997-9.997-26.206 0-36.204l36.203-36.204c9.997-9.998 26.207-9.998 36.204 0L192 312.69 432.095 72.596c9.997-9.997 26.207-9.997 36.204 0l36.203 36.204c9.997 9.997 9.997 26.206 0 36.204l-294.4 294.401c-9.998 9.997-26.207 9.997-36.204-.001z"
+                  />
+                </svg>
+              </span>
+            </div>
+          </div>
+        </header>
+
+        <div class="page-content">
+          <div class="page-header">
+            <div>
+              <h1 class="page-title">Audit Logs</h1>
+              <span class="showing-text"
+                >Showing <strong>4</strong> out of 1024 Logs</span
+              >
+            </div>
+
+            <div class="filters-container">
+              <button class="btn-white" id="btnOpenSearch">
+                <span class="material-symbols-rounded">filter_alt</span>
+                Filter
+              </button>
+              <button class="btn-primary">
+                <span class="material-symbols-rounded">download</span> EXPORT
+                LOGS
+              </button>
+            </div>
+          </div>
+
+          <div class="table-container">
+            <table class="data-table audit-table">
+              <thead>
+                <tr>
+                  <th class="col-id">ID</th>
+                  <th class="col-user">USER</th>
+                  <th class="col-action">ACTION</th>
+                  <th class="col-time">TIME</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="log-id">69c1127b33286c4291164702</span></td>
+                  <td><span class="log-user">Nguyễn Văn A</span></td>
+                  <td>
+                    <span class="log-action">
+                      Updated the syllabus configuration for course
+                      <strong>Advanced Mathematics A1 (MATH101)</strong>.
+                      Changed credit limit from 3 to 4.
+                    </span>
+                  </td>
+                  <td>
+                    <div class="log-time-wrapper">
+                      <span>14/04/2026</span>
+                      <span>08:30:15</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="log-id">65e4b21c7d3e4f5a6b7c8901</span></td>
+                  <td><span class="log-user">Lê Thị B</span></td>
+                  <td>
+                    <span class="log-action">
+                      Logged into the system successfully from IP 192.168.1.45.
+                    </span>
+                  </td>
+                  <td>
+                    <div class="log-time-wrapper">
+                      <span>14/04/2026</span>
+                      <span>09:15:00</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="log-id">65e4a8f9b2c1d3e4f5a6b7c8</span></td>
+                  <td><span class="log-user">Trần Văn C</span></td>
+                  <td>
+                    <span class="log-action">
+                      Deleted employee profile ID
+                      <strong>65e4a8f9b2c1d3e4f5a6b7c8</strong> completely from
+                      the database.
+                    </span>
+                  </td>
+                  <td>
+                    <div class="log-time-wrapper">
+                      <span>13/04/2026</span>
+                      <span>15:45:22</span>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td><span class="log-id">65e4c32d8e4f5a6b7c890123</span></td>
+                  <td><span class="log-user">Phạm Thị D</span></td>
+                  <td>
+                    <span class="log-action">
+                      Submitted mid-term exam results for class
+                      <strong>IT101 - Data Structures</strong>.
+                    </span>
+                  </td>
+                  <td>
+                    <div class="log-time-wrapper">
+                      <span>13/04/2026</span>
+                      <span>10:05:10</span>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+
+      <div class="drawer-overlay" id="searchOverlay"></div>
+      <div class="search-drawer" id="searchDrawer">
+        <div class="drawer-header">
+          <h3 class="drawer-title">Advanced Search</h3>
+          <button class="btn-close-drawer" id="btnCloseSearch">
+            <span class="material-symbols-rounded">close</span>
+          </button>
+        </div>
+
+        <div class="drawer-body">
+          <div class="form-group">
+            <label>User ID</label>
+            <input
+              type="text"
+              placeholder="Nhập mã ID (VD: 69c1127b33286c4291164702)..."
+            />
+          </div>
+
+          <div class="form-group">
+            <label>User</label>
+            <input type="text" placeholder="Nhập tên người dùng..." />
+          </div>
+
+          <div class="form-group">
+            <label>Action</label>
+            <input type="text" placeholder="Tìm kiếm hành động..." />
+          </div>
+
+          <div class="form-group">
+            <label>Time</label>
+            <input type="date" />
+          </div>
+        </div>
+
+        <div class="drawer-footer">
+          <button class="btn-white" id="btnClearSearch">Clear</button>
+          <button class="btn-primary">Apply Search</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const btnOpen = document.getElementById("btnOpenSearch");
+      const btnClose = document.getElementById("btnCloseSearch");
+      const btnClear = document.getElementById("btnClearSearch");
+      const overlay = document.getElementById("searchOverlay");
+      const drawer = document.getElementById("searchDrawer");
+
+      const openDrawer = () => {
+        overlay.classList.add("active");
+        drawer.classList.add("open");
+      };
+
+      const closeDrawer = () => {
+        overlay.classList.remove("active");
+        drawer.classList.remove("open");
+      };
+
+      const clearSearchForm = () => {
+        const inputs = drawer.querySelectorAll("input");
+        const selects = drawer.querySelectorAll("select");
+        inputs.forEach((input) => (input.value = ""));
+        selects.forEach((select) => (select.selectedIndex = 0));
+      };
+
+      btnOpen.addEventListener("click", openDrawer);
+      btnClose.addEventListener("click", closeDrawer);
+      overlay.addEventListener("click", closeDrawer);
+
+      if (btnClear) {
+        btnClear.addEventListener("click", clearSearchForm);
+      }
+
+      window.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && drawer.classList.contains("open")) {
+          closeDrawer();
+        }
+      });
+    </script>
+  </body>
+</html>

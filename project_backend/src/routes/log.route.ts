@@ -5,3 +5,9 @@ import { authorization } from "../auth/auth.middleware";
 export const router = express.Router();
 
 router.get("/", authorization.authenticateToken, (req, res) => logController.getLogs(req, res));
+router.get("/course", authorization.authenticateToken, (req, res) =>
+  logController.getLogsByCourse(req, res)
+);
+router.post("/course", authorization.authenticateToken, (req, res) =>
+  logController.addCourseLog(req, res)
+);

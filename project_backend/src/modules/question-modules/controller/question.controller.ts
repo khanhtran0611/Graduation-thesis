@@ -9,6 +9,7 @@ import { AddServiceRegistry } from "../service-registry/add-question.registry";
 import { UpdateServiceRegistry } from "../service-registry/edit-question.registry";
 import { ViewServiceRegistry } from "../service-registry/view-question.registry";
 import { DeleteServiceRegistry } from "../service-registry/delete-question.registry";
+import logService from "../../log-services/service/log.service";
 
 export class QuestionController {
   private static readonly ADD_VER = "V1";
@@ -59,7 +60,16 @@ export class QuestionController {
     try {
       const user = (req as any).user;
       const result = await this.addService.createQuestion(req.body, user);
-      await this.log(req, "CREATE_QUESTION"); // <--- Log dưới chân hàm
+      const courseId = req.query.courseId as string | undefined;
+      const questionId = result?._id?.toString() || result?.id || "";
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Create new question with id : ${questionId}`,
+        courseId
+      );
+
       return ResponseUtils.ok(res, result);
     } catch (e: any) {
       return ResponseUtils.error(res, e.message);
@@ -70,8 +80,17 @@ export class QuestionController {
     try {
       const user = (req as any).user;
       const result = await this.updateService.updateQuestion(req.params.id, req.body, user);
-      await this.log(req, "UPDATE_QUESTION"); // <--- Log dưới chân hàm
-      return ResponseUtils.ok(res, result);
+      const courseId = req.query.courseId as string | undefined;
+      const fieldsLabel = result.changedFields.length > 0 ? result.changedFields.join(", ") : "none";
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Edited question ${req.params.id} 's fields: ${fieldsLabel}`,
+        courseId
+      );
+
+      return ResponseUtils.ok(res, result.data);
     } catch (e: any) {
       return ResponseUtils.error(res, e.message);
     }
@@ -82,7 +101,15 @@ export class QuestionController {
       const user = (req as any).user;
       const result = await this.deleteService.deleteOneQuestion(req.params.id, user);
       if (result.deleted) {
-        await this.log(req, "DELETE_ONE_QUESTION"); // <--- Log dưới chân hàm
+        const courseId = req.query.courseId as string | undefined;
+        await logService.addCourseLog(
+          user?.id || "",
+          user?.name || "",
+          user?.role || "",
+          `Deleted question with id : ${req.params.id}`,
+          courseId
+        );
+
         return ResponseUtils.ok(res, result);
       }
       return ResponseUtils.notFound(res);
@@ -106,3 +133,4 @@ export class QuestionController {
 }
 
 export const questionController = new QuestionController();
+
