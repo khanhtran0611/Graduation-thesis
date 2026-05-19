@@ -18,6 +18,7 @@ export interface QuestionDocument extends Document {
   option_compiled: string;
   option_max_size: number;
   questions_list: SubQuestion[];
+  is_archived: boolean;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -39,6 +40,7 @@ const QuestionSchema = new Schema<QuestionDocument>(
     option_compiled: { type: String, required: false },
     option_max_size: { type: Number, required: false },
     questions_list: { type: [Object], required: false },
+    is_archived: { type: Boolean, required: false, default: false },
   },
   {
     timestamps: true,

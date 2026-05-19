@@ -18,6 +18,7 @@ export class GetNodeInfoServiceV1 implements IGetNodeInfoService {
         $match: {
           node_id: nodeId,
           type: { $ne: "group" },
+          is_archived: false,
         },
       },
       {
@@ -44,7 +45,7 @@ export class GetNodeInfoServiceV1 implements IGetNodeInfoService {
     }
 
     const groupsDocs = await QuestionDB.find(
-      { node_id: nodeId, type: "group" },
+      { node_id: nodeId, type: "group", is_archived: false },
       { _id: 1, questions_list: 1 }
     ).lean();
 

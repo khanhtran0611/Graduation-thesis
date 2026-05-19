@@ -27,6 +27,18 @@ router.delete("/:id", authorization.authenticateToken, questionController.delete
 // Xóa nhiều câu hỏi
 router.post("/delete-many", authorization.authenticateToken, questionController.deleteManyQuestion);
 
+// Archive một câu hỏi
+router.put("/archive/:id", authorization.authenticateToken, questionController.archiveOneQuestion);
+
+// Archive nhiều câu hỏi
+router.post("/archive-many", authorization.authenticateToken, questionController.archiveManyQuestions);
+
+// Restore một câu hỏi
+router.put("/restore/:id", authorization.authenticateToken, questionController.restoreOneQuestion);
+
+// Restore nhiều câu hỏi
+router.post("/restore-many", authorization.authenticateToken, questionController.restoreManyQuestions);
+
 // Lưu ý: Các hàm như compileLatexPdf, proxyImage, saveImage...
 // nếu chưa chuyển sang kiến trúc Service mới thì ông vẫn gọi từ questionController cũ.
 

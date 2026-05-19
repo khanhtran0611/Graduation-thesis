@@ -21,6 +21,8 @@ export type NodeInfo = {
   count: number;
 };
 
+export type NodeExamInfo = NodeInfo & { name: string };
+
 export type RootExamSummary = {
   id: string;
   username: string;

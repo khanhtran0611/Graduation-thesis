@@ -48,4 +48,52 @@ export class DeleteQuestionServiceV1 implements IDeleteQuestionService {
 
     return { requested: ids.length, deleted, deletedImages };
   }
+
+  async archiveOneQuestion(id: string) {
+    const question = await QuestionDB.findByIdAndUpdate(
+      id,
+      { $set: { is_archived: true } },
+      { new: true }
+    ).lean();
+
+    if (!question) throw new Error("Question not found");
+
+    return { archived: true, id };
+  }
+
+  async archiveManyQuestions(ids: string[]) {
+    const result = await QuestionDB.updateMany(
+      { _id: { $in: ids } },
+      { $set: { is_archived: true } }
+    );
+
+    return {
+      requested: ids.length,
+      archived: result.modifiedCount,
+    };
+  }
+
+  async restoreOneQuestion(id: string) {
+    const question = await QuestionDB.findByIdAndUpdate(
+      id,
+      { $set: { is_archived: false } },
+      { new: true }
+    ).lean();
+
+    if (!question) throw new Error("Question not found");
+
+    return { restored: true, id };
+  }
+
+  async restoreManyQuestions(ids: string[]) {
+    const result = await QuestionDB.updateMany(
+      { _id: { $in: ids } },
+      { $set: { is_archived: false } }
+    );
+
+    return {
+      requested: ids.length,
+      restored: result.modifiedCount,
+    };
+  }
 }

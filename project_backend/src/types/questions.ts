@@ -18,6 +18,7 @@ export type Question = {
   option_compiled: string;
   option_max_size: number;
   questions_list: SubQuestion[];
+  is_archived: boolean
   createdAt: Date;
   updatedAt: Date;
 };
@@ -59,6 +60,7 @@ export const toQuestion = (doc: any): Question => ({
   option_compiled: doc.option_compiled ?? "",
   option_max_size: doc.option_max_size ?? 0,
   questions_list: doc.questions_list ?? [],
+  is_archived: doc.is_archived ?? false,
   createdAt: doc.createdAt,
   updatedAt: doc.updatedAt,
 });

@@ -7,8 +7,9 @@ export class ViewQuestionServiceV1 implements IViewQuestionService {
     return "v1";
   }
 
-  async getQuestionsCards(nodeId: string) {
-    const docs = await QuestionDB.find({ node_id: nodeId }).lean();
+  async getQuestionsCards(nodeId: string, mode?: string) {
+    const isArchived = mode === "archive";
+    const docs = await QuestionDB.find({ node_id: nodeId, is_archived: isArchived }).lean();
     return docs.map((doc) => toQuestionCard(doc));
   }
 

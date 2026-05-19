@@ -48,7 +48,8 @@ export class QuestionController {
 
   getQuestionsCards = async (req: Request, res: Response) => {
     try {
-      const data = await this.viewService.getQuestionsCards(req.params.node_id);
+      const mode = req.query.mode as string | undefined;
+      const data = await this.viewService.getQuestionsCards(req.params.node_id, mode);
       return ResponseUtils.ok(res, data);
     } catch (e: any) {
       return ResponseUtils.error(res, e.message);
@@ -124,7 +125,97 @@ export class QuestionController {
       const { questionIds } = req.body;
       const result = await this.deleteService.deleteManyQuestion(questionIds, user);
 
-      await this.log(req, "DELETE_MANY_QUESTION"); // <--- Log dưới chân hàm
+      const courseId = req.query.courseId as string | undefined;
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Deleted ${result.deleted} questions (ids: ${questionIds.join(", ")})`,
+        courseId
+      );
+
+      return ResponseUtils.ok(res, result);
+    } catch (e: any) {
+      return ResponseUtils.error(res, e.message);
+    }
+  };
+
+  archiveOneQuestion = async (req: Request, res: Response) => {
+    try {
+      const user = (req as any).user;
+      const result = await this.deleteService.archiveOneQuestion(req.params.id);
+
+      const courseId = req.query.courseId as string | undefined;
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Archived question with id : ${req.params.id}`,
+        courseId
+      );
+
+      return ResponseUtils.ok(res, result);
+    } catch (e: any) {
+      return ResponseUtils.error(res, e.message);
+    }
+  };
+
+  archiveManyQuestions = async (req: Request, res: Response) => {
+    try {
+      const user = (req as any).user;
+      const { questionIds } = req.body;
+      const result = await this.deleteService.archiveManyQuestions(questionIds);
+
+      const courseId = req.query.courseId as string | undefined;
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Archived ${result.archived} questions (ids: ${questionIds.join(", ")})`,
+        courseId
+      );
+
+      return ResponseUtils.ok(res, result);
+    } catch (e: any) {
+      return ResponseUtils.error(res, e.message);
+    }
+  };
+
+  restoreOneQuestion = async (req: Request, res: Response) => {
+    try {
+      const user = (req as any).user;
+      const result = await this.deleteService.restoreOneQuestion(req.params.id);
+
+      const courseId = req.query.courseId as string | undefined;
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Restored question with id : ${req.params.id}`,
+        courseId
+      );
+
+      return ResponseUtils.ok(res, result);
+    } catch (e: any) {
+      return ResponseUtils.error(res, e.message);
+    }
+  };
+
+  restoreManyQuestions = async (req: Request, res: Response) => {
+    try {
+      const user = (req as any).user;
+      const { questionIds } = req.body;
+      const result = await this.deleteService.restoreManyQuestions(questionIds);
+
+      const courseId = req.query.courseId as string | undefined;
+      await logService.addCourseLog(
+        user?.id || "",
+        user?.name || "",
+        user?.role || "",
+        `Restored ${result.restored} questions (ids: ${questionIds.join(", ")})`,
+        courseId
+      );
+
       return ResponseUtils.ok(res, result);
     } catch (e: any) {
       return ResponseUtils.error(res, e.message);
@@ -133,4 +224,3 @@ export class QuestionController {
 }
 
 export const questionController = new QuestionController();
-
