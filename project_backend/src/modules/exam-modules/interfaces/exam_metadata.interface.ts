@@ -1,4 +1,4 @@
-import { CombinedInfo, GeneralInfo, GroupInfo } from "../../../types/exam";
+import { CombinedInfo, GeneralInfo, GroupInfo, NodeExamInfo } from "../../../types/exam";
 
 export type SaveRootExamRequestBody = {
   course_id: string;
@@ -17,4 +17,5 @@ export interface ISaveRootExamService {
 export interface IGetNodeInfoService {
   getVersion(): string;
   getNodeInfo(nodeId: string): Promise<{ generals: GeneralInfo[]; groups: GroupInfo[] }>;
+  getExamNodeInfo(examId: string): Promise<NodeExamInfo[]>;
 }

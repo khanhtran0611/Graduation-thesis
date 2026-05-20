@@ -70,6 +70,15 @@ class ExamMetadataController {
       return this.handleError(res, error);
     }
   }
+
+  public async getExamNodeInfo(req: Request, res: Response): Promise<Response> {
+    try {
+      const data = await this.getNodeInfoService.getExamNodeInfo(req.params.id);
+      return ok(res, data);
+    } catch (error) {
+      return this.handleError(res, error);
+    }
+  }
 }
 
 const examMetadataController = new ExamMetadataController();

@@ -250,7 +250,7 @@
             <button
               class="action-btn icon-btn"
               title="Edit Exam"
-              onclick="openSuccessModal()"
+              onclick="openErrorModal()"
             >
               <span class="material-symbols-rounded">edit_square</span>
             </button>
@@ -272,21 +272,21 @@
         </div>
       </main>
     </div>
-<div class="modal-overlay" id="successModal" style="display: none;">
-  <div class="modal-container alert-modal">
-    <div class="modal-body success-alert-body">
-      <div class="success-icon-wrapper">
-        <div class="success-icon-circle">
-          <span class="material-symbols-rounded">check</span>
+<div class="modal-overlay" id="errorModal" style="display: none;">
+  <div class="modal-container alert-modal error-alert-modal">
+    <div class="modal-body error-alert-body">
+      <div class="error-icon-wrapper">
+        <div class="error-icon-circle">
+          <span class="material-symbols-rounded">error</span>
         </div>
       </div>
       
-      <h3 class="alert-title">Successfully Saved!</h3>
-      <p class="alert-message">The exam configuration and settings have been updated in the system.</p>
+      <h3 class="alert-title">Update Failed!</h3>
+      <p class="alert-message">Something went wrong while saving the exam configurations. Please check your connection and try again.</p>
     </div>
     
     <div class="modal-footer alert-footer">
-      <button class="btn-primary success-confirm-btn" onclick="closeSuccessModal()">
+      <button class="btn-primary error-confirm-btn" onclick="closeErrorModal()">
         OK, Got it
       </button>
     </div>
@@ -294,29 +294,29 @@
 </div>
 
 <script>
-  const successModal = document.getElementById('successModal');
+  const errorModal = document.getElementById('errorModal');
 
-  // Hàm mở modal thông báo thành công
-  function openSuccessModal() {
-    successModal.style.display = 'flex';
+  // Hàm mở modal thông báo lỗi
+  function openErrorModal() {
+    errorModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
 
   // Hàm đóng modal
-  function closeSuccessModal() {
-    successModal.style.display = 'none';
+  function closeErrorModal() {
+    errorModal.style.display = 'none';
     document.body.style.overflow = 'auto';
   }
 
   // Đóng khi click ra ngoài vùng trắng của modal container
   window.addEventListener('click', (e) => {
-    if (e.target === successModal) closeSuccessModal();
+    if (e.target === errorModal) closeErrorModal();
   });
 
   // Hỗ trợ phím ESC để đóng nhanh
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && successModal.style.display === 'flex') {
-      closeSuccessModal();
+    if (e.key === 'Escape' && errorModal.style.display === 'flex') {
+      closeErrorModal();
     }
   });
 </script>

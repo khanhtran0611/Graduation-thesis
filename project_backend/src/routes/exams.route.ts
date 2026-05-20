@@ -25,6 +25,9 @@ router.get("/root-exams/:course_id", authorization.authenticateToken, (req, res)
 router.delete("/:id", authorization.authenticateToken, (req, res) =>
   generalManageController.deleteExamById(req, res)
 );
+router.put("/:id", authorization.authenticateToken, (req, res) =>
+  generalManageController.editExam(req, res)
+);
 router.get("/:id/questions", authorization.authenticateToken, (req, res) =>
   generalManageController.getExamQuestions(req, res)
 );
@@ -35,5 +38,8 @@ router.post("/compile-pdf", authorization.authenticateToken, (req, res) =>
 
 router.get("/node-info/:node_id", authorization.authenticateToken, (req, res) =>
   examMetadataController.getNodeInfo(req, res)
+);
+router.get("/:id/node-info", authorization.authenticateToken, (req, res) =>
+  examMetadataController.getExamNodeInfo(req, res)
 );
 export default router;

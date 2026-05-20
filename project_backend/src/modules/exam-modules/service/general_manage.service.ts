@@ -183,6 +183,27 @@ export class GeneralManageService {
 
     return rootExams;
   }
+
+  public async editExam(id: string, body: Record<string, unknown>) {
+    if (!id) {
+      throw new ServiceError(400, "id is required");
+    }
+
+    const exam = await ExamDB.findById(id);
+    if (!exam) {
+      throw new ServiceError(404, "Exam not found");
+    }
+
+    Object.assign(exam, body);
+    const changedFields = exam.modifiedPaths();
+    const savedExam = await exam.save();
+
+    return {
+      data: savedExam,
+      changedFields,
+      course_id: savedExam.course_id,
+    };
+  }
 }
 
 const generalManageService = new GeneralManageService();

@@ -250,7 +250,7 @@
             <button
               class="action-btn icon-btn"
               title="Edit Exam"
-              onclick="openSuccessModal()"
+              onclick="openWarningModal()"
             >
               <span class="material-symbols-rounded">edit_square</span>
             </button>
@@ -272,51 +272,63 @@
         </div>
       </main>
     </div>
-<div class="modal-overlay" id="successModal" style="display: none;">
-  <div class="modal-container alert-modal">
-    <div class="modal-body success-alert-body">
-      <div class="success-icon-wrapper">
-        <div class="success-icon-circle">
-          <span class="material-symbols-rounded">check</span>
+<div class="modal-overlay" id="warningModal" style="display: none;">
+  <div class="modal-container alert-modal warning-alert-modal">
+    <div class="modal-body warning-alert-body">
+      <div class="warning-icon-wrapper">
+        <div class="warning-icon-circle">
+          <span class="material-symbols-rounded">warning</span>
         </div>
       </div>
       
-      <h3 class="alert-title">Successfully Saved!</h3>
-      <p class="alert-message">The exam configuration and settings have been updated in the system.</p>
+      <h3 class="alert-title">Are you sure?</h3>
+      <p class="alert-message">This action cannot be undone. All related data for this exam variant will be permanently removed from the system.</p>
     </div>
     
-    <div class="modal-footer alert-footer">
-      <button class="btn-primary success-confirm-btn" onclick="closeSuccessModal()">
-        OK, Got it
+    <div class="modal-footer alert-footer warning-footer">
+      <button class="btn-secondary warning-cancel-btn" onclick="closeWarningModal()">
+        Cancel
+      </button>
+      <button class="btn-primary warning-confirm-btn" onclick="handleWarningAction()">
+        Yes, Proceed
       </button>
     </div>
   </div>
 </div>
 
 <script>
-  const successModal = document.getElementById('successModal');
+  const warningModal = document.getElementById('warningModal');
 
-  // Hàm mở modal thông báo thành công
-  function openSuccessModal() {
-    successModal.style.display = 'flex';
+  // Hàm mở modal cảnh báo
+  function openWarningModal() {
+    warningModal.style.display = 'flex';
     document.body.style.overflow = 'hidden';
   }
 
   // Hàm đóng modal
-  function closeSuccessModal() {
-    successModal.style.display = 'none';
+  function closeWarningModal() {
+    warningModal.style.display = 'none';
     document.body.style.overflow = 'auto';
+  }
+
+  // Hàm xử lý khi người dùng quyết định bấm nút xác nhận (Proceed)
+  function handleWarningAction() {
+    console.log("Action confirmed!");
+    
+    // 1. Thực hiện logic (Ví dụ: Xóa đề, hủy thay đổi...)
+    // 2. Đóng modal cảnh báo và có thể mở tiếp modal success nếu cần
+    closeWarningModal();
   }
 
   // Đóng khi click ra ngoài vùng trắng của modal container
   window.addEventListener('click', (e) => {
-    if (e.target === successModal) closeSuccessModal();
+    if (e.target === warningModal) closeWarningModal();
   });
 
-  // Hỗ trợ phím ESC để đóng nhanh
+  // Hỗ trợ phím ESC để đóng nhanh khi muốn hủy
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && successModal.style.display === 'flex') {
-      closeSuccessModal();
+    if (e.key === 'Escape' && warningModal.style.display === 'flex') {
+      closeWarningModal();
     }
   });
 </script>

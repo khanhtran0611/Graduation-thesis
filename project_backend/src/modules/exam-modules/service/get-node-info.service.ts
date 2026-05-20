@@ -1,5 +1,7 @@
 import QuestionDB from "../../../models/question.model";
-import { GeneralInfo, GroupInfo } from "../../../types/exam";
+import { ExamDB } from "../../../models/exam.model";
+import TreeNode from "../../../models/course_hierarchy";
+import { GeneralInfo, GroupInfo, NodeExamInfo } from "../../../types/exam";
 import { IGetNodeInfoService } from "../interfaces/exam_metadata.interface";
 import { ServiceError } from "./general_manage.service";
 
@@ -59,4 +61,33 @@ export class GetNodeInfoServiceV1 implements IGetNodeInfoService {
       groups,
     };
   }
+
+  public async getExamNodeInfo(examId: string): Promise<NodeExamInfo[]> {
+    if (!examId) {
+      throw new ServiceError(400, "examId is required");
+    }
+
+    const exam = await ExamDB.findById(examId).lean();
+    if (!exam) {
+      throw new ServiceError(404, "Exam not found");
+    }
+
+    const nodeInfoList = exam.node_info || [];
+    const nodeIds = nodeInfoList.map((n: any) => n.node_id).filter(Boolean);
+
+    const nodes = await TreeNode.find({ _id: { $in: nodeIds } }, { _id: 1, name: 1 }).lean();
+    const nodeNameMap = new Map<string, string>();
+    nodes.forEach((n: any) => {
+      nodeNameMap.set(n._id.toString(), n.name);
+    });
+
+    const result: NodeExamInfo[] = nodeInfoList.map((n: any) => ({
+      node_id: n.node_id,
+      count: n.count,
+      name: nodeNameMap.get(n.node_id?.toString()) || "Unknown Node",
+    }));
+
+    return result;
+  }
 }
+

@@ -112,6 +112,26 @@ class GeneralManageController {
       return this.handleError(res, error);
     }
   }
+
+  public async editExam(req: Request, res: Response): Promise<Response> {
+    try {
+      const data = await this.service.editExam(req.params.id, req.body);
+
+      const user = (req as any).user;
+      const fieldsLabel = data.changedFields.length > 0 ? data.changedFields.join(", ") : "none";
+      await logService.addCourseLog(
+        user.id,
+        user.name,
+        user.role,
+        `Edited exam ${req.params.id} 's fields: ${fieldsLabel}`,
+        data.course_id
+      );
+
+      return ok(res, data.data);
+    } catch (error) {
+      return this.handleError(res, error);
+    }
+  }
 }
 
 const generalManageController = new GeneralManageController();
