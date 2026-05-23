@@ -1,7 +1,8 @@
 import express, { Request, Response } from "express";
 import { questionController } from "../modules/question-modules/controller/question.controller";
-import { upload, uploadTex } from "../middlewares/upload.middleware";
+import { upload, uploadTex, uploadTxt } from "../middlewares/upload.middleware";
 import { authorization } from "../auth/auth.middleware";
+import { parserController } from "../modules/parser-modules/controller/parser.controller";
 
 export const router = express.Router();
 
@@ -17,6 +18,9 @@ router.get("/:id", authorization.authenticateToken, questionController.getQuesti
 
 // Tạo câu hỏi mới
 router.post("/", authorization.authenticateToken, questionController.createQuestion);
+
+// Upload aiken file
+router.post("/upload/aiken/:node_id", authorization.authenticateToken, uploadTxt.single("file"), parserController.uploadAikenFile);
 
 // Cập nhật câu hỏi
 router.put("/:id", authorization.authenticateToken, questionController.updateQuestion);

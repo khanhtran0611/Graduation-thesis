@@ -35,3 +35,18 @@ export const uploadTex = multer({
     }
   },
 });
+
+export const uploadTxt = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024,
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.originalname.toLowerCase().endsWith(".txt") || file.mimetype === "text/plain") {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type. Only .txt files are allowed."));
+    }
+  },
+});
+

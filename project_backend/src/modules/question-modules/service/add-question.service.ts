@@ -11,4 +11,9 @@ export class AddQuestionServiceV1 implements IAddQuestionService {
 
     return toQuestion(newQuestion); //
   }
+
+  async insertManyQuestion(data: any[]) {
+    const newQuestions = await QuestionDB.insertMany(data);
+    return newQuestions.map(toQuestion);
+  }
 }

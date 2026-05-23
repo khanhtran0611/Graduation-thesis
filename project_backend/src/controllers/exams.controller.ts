@@ -151,9 +151,11 @@ class ExamsController {
             const parentQ = groupQuestionsDocs.find((q) => q._id.toString() === group.id);
 
             if (parentQ && Array.isArray(parentQ.questions_list)) {
-              // Chọn ngẫu nhiên các sub_questions
               const subCountToPick = reqInfo.sub_count;
-              const selectedSubs = getRandomElements(parentQ.questions_list, subCountToPick);
+              const selectedSubs =
+                reqInfo.type === "sequential"
+                  ? parentQ.questions_list.slice(0, subCountToPick)
+                  : getRandomElements(parentQ.questions_list, subCountToPick);
 
               const subIds = selectedSubs
                 .map((sq: any) => sq.id || sq._id?.toString())

@@ -1,5 +1,6 @@
 export interface IAddQuestionService {
   createQuestion(data: any, user: any): Promise<any>;
+  insertManyQuestion(data: any[], user: any): Promise<any>;
   getVersion(): String;
 }
 
