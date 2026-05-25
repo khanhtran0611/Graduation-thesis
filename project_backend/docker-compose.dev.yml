@@ -40,6 +40,42 @@ services:
       - tectonic-cache:/root/.cache/tectonic
       # - /app/node_modules
 
+  # Worker Service - Development Mode
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: project_worker_dev
+    restart: unless-stopped
+    environment:
+      - MESSAGE="Hello from .env"
+      - NODE_ENV=development
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis:6379
+      - MINIO_ENDPOINT=minio
+      - MINIO_PUBLIC_ENDPOINT=localhost
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_USE_SSL=false
+      - MINIO_BUCKET=project-bucket
+      - SECRET_KEY=a4f8e1b3c9d0267519f4e8a2b6d1c03f5a79e2d8c1b04693e7f2a5d9c8b014e3
+      - JWT_SECRET=a4f8e1b3c9d0267519f4e8a2b6d1c03f5a79e2d8c1b04693e7f2a5d9c8b014e3
+    depends_on:
+      - redis
+      - minio
+    networks:
+      - app-network
+    volumes:
+      - ./src:/app/src
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./.env:/app/.env
+      - ../types:/app/types
+      - tectonic-cache:/root/.cache/tectonic
+    command: ["npm", "run", "worker"]
+
   # MinIO Service
   minio:
     image: minio/minio:latest

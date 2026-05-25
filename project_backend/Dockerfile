@@ -8,7 +8,7 @@ COPY package*.json ./
 COPY tsconfig.json ./
 
 # Install dependencies
-RUN npm ci
+RUN npm ci --legacy-peer-deps
 
 # Copy source code
 COPY src ./src
@@ -30,7 +30,7 @@ RUN apk add --no-cache tectonic msttcorefonts-installer fontconfig && \
 COPY package*.json ./
 
 # Install production dependencies only
-RUN npm ci --only=production
+RUN npm ci --only=production --legacy-peer-deps
 
 # Copy built files from builder stage
 COPY --from=builder /app/dist ./dist

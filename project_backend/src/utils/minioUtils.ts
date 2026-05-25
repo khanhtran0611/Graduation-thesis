@@ -5,7 +5,7 @@ import {
   ListObjectsV2Command,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { s3Client, minioConfig } from "../config/minio";
+import { s3Client, minioConfig, publicS3Client } from "../config/minio";
 import { Readable } from "stream";
 
 /**
@@ -18,11 +18,12 @@ import { Readable } from "stream";
 export const uploadFile = async (
   file: Buffer | Readable,
   fileName: string,
-  contentType: string = "application/octet-stream"
+  contentType: string = "application/octet-stream",
+  bucket: string = minioConfig.bucket
 ): Promise<string> => {
   try {
     const command = new PutObjectCommand({
-      Bucket: minioConfig.bucket,
+      Bucket: bucket,
       Key: fileName,
       Body: file,
       ContentType: contentType,
@@ -31,7 +32,7 @@ export const uploadFile = async (
     await s3Client.send(command);
 
     // Return the public URL accessible from browser
-    const url = `${minioConfig.useSSL ? "https" : "http"}://${minioConfig.publicEndpoint}:${minioConfig.port}/${minioConfig.bucket}/${fileName}`;
+    const url = `${minioConfig.useSSL ? "https" : "http"}://${minioConfig.publicEndpoint}:${minioConfig.port}/${bucket}/${fileName}`;
     return url;
   } catch (error) {
     console.error("Error uploading file to MinIO:", error);
@@ -43,19 +44,23 @@ export const uploadFile = async (
  * Get presigned URL for secure file access
  * @param fileName Name of the file
  * @param expiresIn Expiration time in seconds (default: 3600)
+ * @param bucket Name of the bucket (default: minioConfig.bucket)
  * @returns Presigned URL
  */
 export const getPresignedUrl = async (
   fileName: string,
-  expiresIn: number = 3600
+  expiresIn: number = 3600,
+  bucket: string = minioConfig.bucket
 ): Promise<string> => {
   try {
     const command = new GetObjectCommand({
-      Bucket: minioConfig.bucket,
+      Bucket: bucket,
       Key: fileName,
     });
 
-    const url = await getSignedUrl(s3Client, command, { expiresIn });
+    const url = await getSignedUrl(publicS3Client, command, { expiresIn });
+    console.log("url", url)
+    
     return url;
   } catch (error) {
     console.error("Error generating presigned URL:", error);

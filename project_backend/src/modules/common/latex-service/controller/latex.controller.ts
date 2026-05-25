@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { latexService } from "../service/latex.service";
 import { DocumentOrchestrator } from "../../../subsystem_latex-modules/core/document-orchestrator";
 import { DocumentOrchestratorInterface } from "../../../subsystem_latex-modules/core/orchestrator_interface";
+import { latexCompileQueue } from "../../../../config/redis";
 import "multer";
 
 class LatexController {
@@ -62,23 +63,20 @@ class LatexController {
       }
 
       const latexCode = this.documentOrchestrator.buildQuestionContent(content);
-      const pdfBuffer = await latexService.compileTexCodeToPdf(imageList, latexCode);
+      
+      const job = await latexCompileQueue.add("compileContent", {
+        images: imageList,
+        texCode: latexCode,
+      });
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=exam.pdf");
-
-      return res.status(200).send(pdfBuffer);
+      return res.status(202).json({
+        message: "Task is queued for compilation",
+        jobId: job.id,
+      });
     } catch (error) {
-      console.error("Error compiling content LaTeX:", error);
-      if (error instanceof Error && error.message.startsWith("LATEX_COMPILE_FAILED:")) {
-        return res.status(502).json({
-          message: "Failed to compile content LaTeX",
-          error: error.message,
-        });
-      }
-
+      console.error("Error queueing content LaTeX:", error);
       return res.status(500).json({
-        message: "Failed to compile content",
+        message: "Failed to queue content compilation",
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }
@@ -97,23 +95,20 @@ class LatexController {
       }
 
       const latexCode = this.documentOrchestrator.buildOptionLatex(option);
-      const pdfBuffer = await latexService.compileTexCodeToPdf(imageList, latexCode);
+      
+      const job = await latexCompileQueue.add("compileOption", {
+        images: imageList,
+        texCode: latexCode,
+      });
 
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=exam.pdf");
-
-      return res.status(200).send(pdfBuffer);
+      return res.status(202).json({
+        message: "Task is queued for compilation",
+        jobId: job.id,
+      });
     } catch (error) {
-      console.error("Error compiling option LaTeX:", error);
-      if (error instanceof Error && error.message.startsWith("LATEX_COMPILE_FAILED:")) {
-        return res.status(502).json({
-          message: "Failed to compile option LaTeX",
-          error: error.message,
-        });
-      }
-
+      console.error("Error queueing option LaTeX:", error);
       return res.status(500).json({
-        message: "Failed to compile option",
+        message: "Failed to queue option compilation",
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }

@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { DocumentOrchestrator } from "../../subsystem_latex-modules/core/document-orchestrator";
 import { DocumentOrchestratorInterface } from "../../subsystem_latex-modules/core/orchestrator_interface";
 import { ExamDetail2 } from "../../../types/exam";
-import { latexService } from "../../../controllers/latex-service/service/latex.service";
+import { latexCompileQueue } from "../../../config/redis";
 
 class CompileLatexController {
   private documentOrchestrator: DocumentOrchestratorInterface;
@@ -41,23 +41,18 @@ class CompileLatexController {
         show
       );
 
-      const pdfBuffer = await latexService.compileTexCodeToPdf(images, latexCode);
-
-      res.setHeader("Content-Type", "application/pdf");
-      res.setHeader("Content-Disposition", "attachment; filename=exam.pdf");
-
-      return res.status(200).send(pdfBuffer);
+      const job = await latexCompileQueue.add("compileExamLatex", {
+        images: images,
+        texCode: latexCode,
+      });
+      return res.status(202).json({
+        message: "Exam compilation task is queued",
+        jobId: job.id,
+      });
     } catch (error) {
-      console.error("Error compiling exam LaTeX:", error);
-      if (error instanceof Error && error.message.startsWith("LATEX_COMPILE_FAILED:")) {
-        return res.status(502).json({
-          message: "Failed to compile exam LaTeX",
-          error: error.message,
-        });
-      }
-
+      console.error("Error queueing exam LaTeX:", error);
       return res.status(500).json({
-        message: "Failed to compile exam",
+        message: "Failed to queue exam compilation",
         error: error instanceof Error ? error.message : "Unknown error",
       });
     }

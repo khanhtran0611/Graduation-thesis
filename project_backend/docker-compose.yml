@@ -34,6 +34,37 @@ services:
       - ./src:/app/src
       - /app/node_modules
 
+  # Worker Service
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: project_worker
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - NODE_ENV=production
+      - MONGO_URI=mongodb://mongo:27017/GR2_test
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_URL=redis://redis:6379
+      - MINIO_ENDPOINT=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_USE_SSL=false
+      - MINIO_BUCKET=project-bucket
+    depends_on:
+      - mongo
+      - redis
+      - minio
+    networks:
+      - app-network
+    volumes:
+      - ./src:/app/src
+      - /app/node_modules
+    command: ["node", "dist/worker/worker.js"]
+
   # MongoDB Service
   mongo:
     image: mongo:7-jammy

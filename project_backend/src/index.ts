@@ -4,9 +4,11 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import route from "./routes/routes";
 import dotenv from "dotenv";
+import http from "http";
 import { connectDB } from "../src/config/database";
 import { initializeMinIO } from "../src/config/minio";
 import { initializeRedis } from "../src/config/redis";
+import { initSocket } from "../src/config/socket";
 dotenv.config();
 export const app = express();
 const port = process.env.PORT || 5000;
@@ -56,6 +58,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 route(app);
 
-app.listen(port, () => {
+const server = http.createServer(app);
+initSocket(server);
+
+server.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });

@@ -9,7 +9,7 @@ RUN apk add --no-cache tectonic msttcorefonts-installer fontconfig && \
 
 # Install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --legacy-peer-deps
 
 # Copy TypeScript config
 COPY tsconfig.json ./

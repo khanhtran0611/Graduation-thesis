@@ -3,6 +3,7 @@ import {
   CreateBucketCommand,
   HeadBucketCommand,
   PutBucketPolicyCommand,
+  PutBucketLifecycleConfigurationCommand,
 } from "@aws-sdk/client-s3";
 import dotenv from "dotenv";
 
@@ -14,6 +15,7 @@ const minioAccessKey = process.env.MINIO_ACCESS_KEY || "minioadmin";
 const minioSecretKey = process.env.MINIO_SECRET_KEY || "minioadmin";
 const minioUseSSL = process.env.MINIO_USE_SSL === "true";
 const minioBucket = process.env.MINIO_BUCKET || "gr2-bucket";
+const minioPdfBucket = process.env.MINIO_PDF_BUCKET || "gr2-pdf-bucket";
 // Public endpoint for generating URLs accessible from browser
 const minioPublicEndpoint = process.env.MINIO_PUBLIC_ENDPOINT || minioEndpoint;
 
@@ -26,6 +28,17 @@ export const s3Client = new S3Client({
     secretAccessKey: minioSecretKey,
   },
   forcePathStyle: true, // Required for MinIO
+  tls: minioUseSSL,
+});
+
+export const publicS3Client = new S3Client({
+  endpoint: `${minioUseSSL ? "https" : "http"}://${minioPublicEndpoint}:${minioPort}`,
+  region: "us-east-1",
+  credentials: {
+    accessKeyId: minioAccessKey,
+    secretAccessKey: minioSecretKey,
+  },
+  forcePathStyle: true,
   tls: minioUseSSL,
 });
 
@@ -67,6 +80,62 @@ export const initializeMinIO = async (): Promise<void> => {
       );
       console.log(`MinIO bucket '${minioBucket}' is now publicly accessible`);
     }
+
+    // Check if PDF bucket exists
+    let pdfBucketExists = false;
+    try {
+      await s3Client.send(new HeadBucketCommand({ Bucket: minioPdfBucket }));
+      console.log(`MinIO bucket '${minioPdfBucket}' already exists`);
+      pdfBucketExists = true;
+    } catch (error) {
+      // Bucket doesn't exist, create it
+      await s3Client.send(new CreateBucketCommand({ Bucket: minioPdfBucket }));
+      console.log(`MinIO bucket '${minioPdfBucket}' created successfully`);
+      pdfBucketExists = true;
+    }
+
+    // Set public read policy for the PDF bucket
+    if (pdfBucketExists) {
+      const pdfBucketPolicy = {
+        Version: "2012-10-17",
+        Statement: [
+          {
+            Effect: "Allow",
+            Principal: "*",
+            Action: ["s3:GetObject"],
+            Resource: [`arn:aws:s3:::${minioPdfBucket}/*`],
+          },
+        ],
+      };
+
+      await s3Client.send(
+        new PutBucketPolicyCommand({
+          Bucket: minioPdfBucket,
+          Policy: JSON.stringify(pdfBucketPolicy),
+        })
+      );
+      console.log(`MinIO bucket '${minioPdfBucket}' is now publicly accessible`);
+
+      // Attempt to set Lifecycle Configuration
+      // Note: AWS S3 API only supports 'Days' as an integer for expiration rules.
+      // 1 Day is the minimum allowed by the S3 API for standard bucket lifecycle expiration.
+      await s3Client.send(
+        new PutBucketLifecycleConfigurationCommand({
+          Bucket: minioPdfBucket,
+          LifecycleConfiguration: {
+            Rules: [
+              {
+                ID: "ExpirePDFs",
+                Status: "Enabled",
+                Filter: { Prefix: "" },
+                Expiration: { Days: 1 }, 
+              },
+            ],
+          },
+        })
+      );
+      console.log(`MinIO bucket '${minioPdfBucket}' lifecycle configured (expiration set to 1 day minimum)`);
+    }
   } catch (error) {
     console.error("Failed to initialize MinIO:", error);
     // Don't exit process, MinIO might not be required for all operations
@@ -80,5 +149,6 @@ export const minioConfig = {
   secretKey: minioSecretKey,
   useSSL: minioUseSSL,
   bucket: minioBucket,
+  pdfBucket: minioPdfBucket,
   publicEndpoint: minioPublicEndpoint,
 };
